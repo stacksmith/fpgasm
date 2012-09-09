@@ -1,0 +1,15 @@
+Overall
+-------
+
+-Must verify wiring more.  All inputs and outputs should be connected.
+-Must verify placement overlaps.  Right now, par outputs "error 30", which is pretty confusing.
+
+Specific
+--------
+
+-cCollection.  Check the 'realization' of cfg pairs - data may contain CR's...  Also, note:
+loc:SLICE_X0Y0<CR> other stuff fails.  CR is a menace here.
+
+Syntax changes
+--------------
+Accomodate initalization file for RAMs
