@@ -29,6 +29,7 @@ typedef  unsigned long U64;
 typedef  int S32;
 
 #define DEBUG
+#include "cDatum.h"
 #include "cCollection.h"
 
 void q(void*p);

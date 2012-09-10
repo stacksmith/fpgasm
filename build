@@ -16,6 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with FPGAsm.  If not, see <http://www.gnu.org/licenses/>.
 #******************************************************************************/
- g++ fpgasm.cpp cCollection.cpp cProto.cpp cPrim.cpp cDevice.cpp cModule.cpp \
-cSub.cpp cDyn.cpp cParse.cpp cWires.cpp cWireList.cpp -Wall  -o fpgasm  
+ g++ fpgasm.cpp cDatum.cpp cCollection.cpp cProto.cpp cPrim.cpp cDevice.cpp \
+     cModule.cpp cSub.cpp cDyn.cpp cParse.cpp cWires.cpp cWireList.cpp \
+     -Wall  -o fpgasm  
 cp fpgasm ../TEST/src
