@@ -37,26 +37,12 @@ enum eDatumType {
   TYPE_CFGS,    //10 ???
   TYPE_UNREALIZED=255
 };
-/*
-#define TYPE_INT 0
-#define TYPE_STR 1
-#define TYPE_PIN 2 //direction, buswidth
-#define TYPE_SUB 3 //instances declared in a module
-#define TYPE_LOCXY 4
-#define TYPE_LOCABS 5
-#define TYPE_GOODCFGS 6
-#define TYPE_PROTO 7
-#define TYPE_TILE 8 //used by device to track tiles
-#define TYPE_PARSUB 9 //parameter substitution in sub
-#define TYPE_CFGS 10
-#define TYPE_UNREALIZED 255 //string that must be handled at expansion.
-*/
 class cSub;
 class cProto;  
 class cCollection;
 class cDatum{
 public:
-  eDatumType type;
+  eDatumType type:8;
   union {
     unsigned int valInt;
     char* valStr;
