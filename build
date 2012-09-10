@@ -19,4 +19,4 @@
  g++ fpgasm.cpp cDatum.cpp cCollection.cpp cProto.cpp cPrim.cpp cDevice.cpp \
      cModule.cpp cSub.cpp cDyn.cpp cParse.cpp cWires.cpp cWireList.cpp \
      -Wall  -fpack-struct -o fpgasm  
-cp fpgasm ../TEST/src
+cp fpgasm ../fpgasm-test/src
