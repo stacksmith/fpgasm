@@ -25,7 +25,7 @@
 
 char *CLASS::buf=(char*)malloc(32); //- SLICE_X...Y...\0
 
-CLASS::CLASS(U8 typ){
+CLASS::CLASS(eDatumType typ){
   type=typ;
 }
 CLASS::~CLASS(){
@@ -33,8 +33,10 @@ CLASS::~CLASS(){
       case TYPE_UNREALIZED:
       case TYPE_STR: 
         free(valStr); break;
+      default:
+      //TODO: comprehensive destructor
+        break;
     }
-    //TODO: comprehensive destructor
 }
 cDatum* CLASS::newStr(const char* str,int len){
   cDatum* ret = new cDatum(TYPE_STR);

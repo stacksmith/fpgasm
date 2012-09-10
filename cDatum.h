@@ -23,6 +23,21 @@
  
  This class is represents a data item stored in a cCollection.
 ******************************************************************************/
+enum eDatumType {
+  TYPE_INT=0,
+  TYPE_STR,     //1
+  TYPE_PIN,     //2 direction,buswidth
+  TYPE_SUB,     //3 instances declared in a module
+  TYPE_LOCXY,   //4
+  TYPE_LOCABS,  //5
+  TYPE_GOODCFGS,//6
+  TYPE_PROTO,   //7
+  TYPE_TILE,    //8 used by device to track tiles
+  TYPE_PARSUB,  //9 parameter substitution TODO:deprecated??
+  TYPE_CFGS,    //10 ???
+  TYPE_UNREALIZED=255
+};
+/*
 #define TYPE_INT 0
 #define TYPE_STR 1
 #define TYPE_PIN 2 //direction, buswidth
@@ -35,12 +50,13 @@
 #define TYPE_PARSUB 9 //parameter substitution in sub
 #define TYPE_CFGS 10
 #define TYPE_UNREALIZED 255 //string that must be handled at expansion.
+*/
 class cSub;
 class cProto;  
 class cCollection;
 class cDatum{
 public:
-  U8 type;
+  eDatumType type;
   union {
     unsigned int valInt;
     char* valStr;
@@ -60,7 +76,7 @@ public:
  //friend cDatum* newStr(const char* str,int len);
   //friend cDatum* newInt(const char* str,int len);
 public:
-  cDatum(U8 type);
+  cDatum(eDatumType type);
   ~cDatum();
   void dump(FILE*f);
   static cDatum* newStr(const char* str,int len);
