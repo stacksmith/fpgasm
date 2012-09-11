@@ -22,14 +22,19 @@
  
  Originally I just used a byte array to represent a list of nets.  But I needed
  more flexibility, so I centralized access to the byte array into this class.
- Encoding: each net consists of two or more endpoints.  Each endpoint in turn
- consists of an INST index and a PIN index, each stored as a byte. Special cases:
+ Encoding: each net consists of two or more endpoints.
+   Each endpoint in turn consists of:
+   - an INST index
+   - a PIN index
+   - busid (index within the bus).
+   
+   There are special cases:
  INST
  =====================
   FF   My wire
   FE   End of net
  =====================
-  My pins also have special cases:
+  'My' pins also have special cases:
  =====================
   FF   My vcc
   FE   My gnd.

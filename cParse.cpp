@@ -168,7 +168,12 @@ void CLASS::parseParamNames(cModule* module){
   }
   module->paramnames->solidify();
 }
-
+/******************************************************************************
+      parseWireEndpoint
+      
+Parse a unit of wire declaration.
+                                                                               
+******************************************************************************/ 
 sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
 //fprintf(stderr,"STARTING [%s]\n",ptr);
   cCollection*ppins;
@@ -234,8 +239,11 @@ sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
       ws(true); ep.busid2=ep.busid1=parseLiteral();
       if((ep.busid1<0)||(ep.busid1>=(ppins->data[ep.pindex]->pinBusWidth))) {
         errorIn("parseWireEndpoint");
-        fprintf(stderr,"Pin %s[%d] has an invalid index; should be between 0 and %d\n",
-                ppins->name[ep.pindex],ep.busid1,ppins->data[ep.pindex]->pinBusWidth-1);
+        fprintf(stderr,"Pin %s[%d] has an invalid index; should be between %d and %d\n",
+                ppins->name[ep.pindex],
+                ep.busid1,
+                ep.busid1+1,
+                ppins->data[ep.pindex]->pinBusWidth-1);
         error(1);
       } 
       // is it a range?
@@ -245,8 +253,10 @@ sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
         ws(true); ep.busid2=parseLiteral();
         if((ep.busid2<=ep.busid1)||(ep.busid2>=(ppins->data[ep.pindex]->pinBusWidth))) {
           errorIn("parseWireEndpoint");
-          fprintf(stderr,"Pin %s[%d:%d] has an invalid index; should be between 0 and %d\n",
-                ppins->name[ep.pindex],ep.busid1,ep.busid2,
+          fprintf(stderr,"Pin %s[%d:%d] has an invalid index; should be between %d and %d\n",
+                ppins->name[ep.pindex],ep.busid1,
+                ep.busid2,
+                ep.busid1+1,
                 ppins->data[ep.pindex]->pinBusWidth-1);
           error(1);
         } 
@@ -275,14 +285,13 @@ void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst){
   // start by parsing the source.  It may refer to a bus, in which case we shall
   // loop for every wire in the bus...
   // For starters, create a fixed array of 16 endpoints.
-  sWireEndpoint ep[16];
-  //parse all the endpoints first.
+  #define MAX_ENDPOINTS 16
+  sWireEndpoint ep[MAX_ENDPOINTS];
+  //parse all the endpoints. ep[0] is the source endpoint.
   ep[0]=parseWireEndpoint(module,idxInst,pinst);
-//fprintf(stderr,"SOURCE DONE\n");
-  int buswidth= ep[0].busid2 - ep[0].busid1; 
-  int i=1;
-  int j;
-  int k;
+  int srcBusWidth= ep[0].busid2 - ep[0].busid1; //width-1; 0 means scalar... 
+//fprintf(stderr,"module '%s'; width %d\n",module->name,buswidth);
+  int i=1; //index of endpoint being processed
   int len;
   while(true){
     ws(true); len=cnt();
@@ -291,13 +300,17 @@ void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst){
     if(tokAnything("to",len))
       len=cnt(); //just skip it
     ep[i]=parseWireEndpoint(module,idxInst,pinst);
-    if(buswidth != (ep[i].busid2-ep[i].busid1)){
-      errorIn("parseWire");
-      fprintf(stderr,"bus width mismatch. Expected %d, found %d\n",buswidth+1,ep[i].busid2-ep[i].busid1+1);
-      error(1);
+    /* if source is a scalar, we can connect it to all destination bus widths.
+       if it's a bus, it has to match the destination endpoint buswidths. */
+    if(srcBusWidth) { //a scalar can go to a bus.. 
+      if(srcBusWidth != (ep[i].busid2-ep[i].busid1)){
+        errorIn("parseWire");
+        fprintf(stderr,"bus width mismatch. Expected %d, found %d\n",srcBusWidth+1,ep[i].busid2-ep[i].busid1+1);
+        error(1);
+      }
     }
     i++;
-    if(i>15){
+    if(i>(MAX_ENDPOINTS-1)){
       errorIn("parseWire");
       fprintf(stderr,"Wire chain too long; maximum 16 exceeded\n");
       error(1);
@@ -309,16 +322,32 @@ void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst){
   // must be looped through wire by wire.  So now, loop on first one's
   // bus width.
 //fprintf(stderr,"WILL ADD BUS OF %d WIRES\n",buswidth+1);
-  for(j=0;j<buswidth+1;j++){ //for every wire in the bus
-    for(k=0;k<i;k++) {    //connect every endpoint
-      module->pwires->add(
-        ep[k].inst,
-        ep[k].pindex,
-        ep[k].busid1+j);
+  if(srcBusWidth){
+fprintf(stderr,"bus wire in module '%s'; width %d\n",module->name,srcBusWidth);
+    int j;   
+    for(j=0;j<srcBusWidth+1;j++){ //for every wire in the bus
+      int k;
+      for(k=0;k<i;k++) {    //connect every endpoint
+        module->pwires->add(
+          ep[k].inst,
+          ep[k].pindex,
+          ep[k].busid1+j);
+      }
+      module->pwires->close(); //and end the wire
     }
-    module->pwires->close(); //and end the wire
+  } else{ //source is a scalar; connect it to all destinations
+    //source wire is a scalar...
+   module->pwires->add( ep[0].inst,ep[0].pindex,ep[0].busid1);
+    int ei; //endpoint index
+    for(ei=1;ei<i;ei++){ //for every endpoint (after source endpoint)
+      int j;
+     for(j=ep[ei].busid1; j<=ep[ei].busid2; j++){ //for every bus wire
+  fprintf(stderr,"scalar wire in module '%s'; wiring to [%d]\n",module->name,j);
+       module->pwires->add(ep[ei].inst, ep[ei].pindex,j);
+      }
+    }
+    module->pwires->close(); //one wire from source, closed.
   }
-
 }
 
 /******************************************************************************
