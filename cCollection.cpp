@@ -17,8 +17,6 @@
     along with FPGAsm.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-//#include "cDatum.h"
-//#include "cCollection.h"
 #include "global.h"
 #include "cSub.h"
 #include "cProto.h"
@@ -98,13 +96,6 @@ void CLASS::solidify(){
   //replace builder with properly sized copy of the array
   name= (char**)realloc(name,size*sizeof(char*));
   data= (cDatum**)realloc(data,size*sizeof(cDatum*));
-//    char** newname = (char**)malloc(size*sizeof(char*));
-//  memcpy(newname,name,(size*sizeof(char*)));
-//  name=newname; //release builder  
-  //replace data with properly sized copy of the array as well
-//  cDatum** newdata=(cDatum**)malloc(size*sizeof(cDatum*));
-//  memcpy(newdata,data,(size*sizeof(cDatum*)));
-//  data=newdata; //release builder
 #ifdef DEBUG
   debugmax=size;
 //fprintf(stderr,"Solidified %s to %d elements",debugname?debugname:"unknown",size);
