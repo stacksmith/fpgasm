@@ -50,6 +50,7 @@ private:
   //these ws,cnt, parse, and return cnt()
   int requireWord(const char* str,int len);
   int requireSeparator(const char* caller,const char* seps,char*actual=0); 
+  int optionalColon();
   
   int notEnd();
   //these check here for a token. If match, advance.

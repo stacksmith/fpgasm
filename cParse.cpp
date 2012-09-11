@@ -657,10 +657,10 @@ cModule* CLASS::parseModule(){
   ws(true); size=cnt();
   while(!tokAnything("{",size)){
     if(tokAnything("input",size)){
-      requireSeparator(funcname,":");
+      optionalColon();
       parsePins(module->pins,0); //inputs
     }else if(tokAnything("output",size)){
-      requireSeparator(funcname,":");
+      optionalColon();
       parsePins(module->pins,1); //outputs
     }
     else {
@@ -927,6 +927,16 @@ int CLASS::requireSeparator  (const char*caller,const char* separators,char*actu
     separators,c);
   error(1);
   return 0; //just to stop compiler barksf
+}
+/******************************************************************************
+  returns cnt()                                                                             
+******************************************************************************/ 
+int CLASS::optionalColon(){
+  ws(true);         //preceding whitespace
+  if(':'==*ptr){
+    ptr++;ws(true);
+  }
+  return cnt(); 
 }
 /******************************************************************************
                                                                                
