@@ -323,7 +323,7 @@ void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst){
   // bus width.
 //fprintf(stderr,"WILL ADD BUS OF %d WIRES\n",buswidth+1);
   if(srcBusWidth){
-fprintf(stderr,"bus wire in module '%s'; width %d\n",module->name,srcBusWidth);
+//fprintf(stderr,"bus wire in module '%s'; width %d\n",module->name,srcBusWidth);
     int j;   
     for(j=0;j<srcBusWidth+1;j++){ //for every wire in the bus
       int k;
@@ -342,7 +342,7 @@ fprintf(stderr,"bus wire in module '%s'; width %d\n",module->name,srcBusWidth);
     for(ei=1;ei<i;ei++){ //for every endpoint (after source endpoint)
       int j;
      for(j=ep[ei].busid1; j<=ep[ei].busid2; j++){ //for every bus wire
-  fprintf(stderr,"scalar wire in module '%s'; wiring to [%d]\n",module->name,j);
+//  fprintf(stderr,"scalar wire in module '%s'; wiring to [%d]\n",module->name,j);
        module->pwires->add(ep[ei].inst, ep[ei].pindex,j);
       }
     }
