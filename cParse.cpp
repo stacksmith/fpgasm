@@ -784,8 +784,8 @@ bool CLASS::enclosedComment(){
       memcpy(buf,errsrc,sizeof(buf));
       ptr=errptr;
       lineno=errline;
-      errorIn("parseComment()");
-      fprintf(stderr,"where is the closing /*\n");
+      errorIn("enclosedComment()");
+      fprintf(stderr,"where is the closing */\n");
       error(1);
     }
   }
@@ -804,7 +804,7 @@ bool CLASS::wsComment(){
   if(0==strncmp(ptr,"//",2)) {
     /* handle // comment to eol by reloading */
     if(!reload()){ 
-      errorIn("wsComments()");
+      errorIn("wsComment()");
       fprintf(stderr,"Out of source in // comment");
       error(1);
     }
