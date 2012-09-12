@@ -26,6 +26,7 @@ typedef  unsigned char U8;
 typedef  unsigned short U16;
 typedef  unsigned int U32;
 typedef  unsigned long U64;
+typedef  long S64;
 typedef  int S32;
 
 #define DEBUG
