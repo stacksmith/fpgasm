@@ -736,7 +736,7 @@ void CLASS::parseModules(){
     called by include as well...                                                                      
 ******************************************************************************/ 
 void CLASS::parse(FILE*f){
-  file=f;
+  setFile(f);
   parseModules();
 }
 /**************************************************************************

@@ -17,7 +17,8 @@
 #    along with FPGAsm.  If not, see <http://www.gnu.org/licenses/>.
 #******************************************************************************/
  g++ fpgasm.cpp cDatum.cpp cCollection.cpp cProto.cpp cPrim.cpp cDevice.cpp \
-     cModule.cpp cSub.cpp cDyn.cpp cParse.cpp cWires.cpp cWireList.cpp \
+     cModule.cpp cSub.cpp cDyn.cpp cParseStream cParse.cpp cWires.cpp \
+     cWireList.cpp \
      -Wall  -fpack-struct -o fpgasm  
 #CHANGE THIS LINE to your preferred PATH-visible directory
 cp fpgasm ~/Portable/bin

@@ -16,55 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with FPGAsm.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-class cModule;
-class cSub;
-/* While parsing wiring, we generate endpoints.  */
-struct sWireEndpoint {
-  U8 inst;        //index of the instance
-  U8 pindex;      //index of the pin
-  U8 busid1;      //start bus index
-  U8 busid2;      //end   bus index
-};
-
-class cParse {
+#pragma once
+#include "cParseStream.h"
+class cParse: public cParseStream {
 public:
   cParse();
   ~cParse();
-  void parse(FILE*f);
   
 private:
   void parseModules();
   bool handleInclude(int len);
+  void validateName(int len,cModule* module);
+ 
   
-  
-   bool reload();
-  //ws-related
-  bool wsp();
-  bool ws(bool required);
-  bool enclosedComment();
-  bool wsComment();
-  
-//  bool parseComment();
-  int cnt();
-  int cnt(const char* seps);
-  //these ws,cnt, parse, and return cnt()
-  int requireWord(const char* str,int len);
-  int requireSeparator(const char* caller,const char* seps,char*actual=0); 
-  int optionalColon();
-  
-  int notEnd();
-  //these check here for a token. If match, advance.
-  //bool tokWire(int len);
-//  bool tokHis(int len);
-//  bool tokVcc(int len);
-  bool tokTo(int len);
-  bool tokAnything(const char* str,int parsecnt);
-
-  
-  //cDatum* parseLocation();
-  cDatum* parseQuotedString();
-  int     banglen(char*str); //length of !paramname!
-  cDatum* parseParamData(cModule*module,const char* prepend);
   
   void parsePins(cCollection*pins,int dir);
   void parseParamNames(cModule* module);
@@ -76,21 +40,4 @@ private:
   void parsePairs(cModule* module,cSub* sub);
   cModule* parseModule();
   
-  
-  S32 parseLiteral();  //TODO: duplicated in dyn?
-  void validateName(int len);
-  void validateName(int len,cModule*module);
-//  void validateLocation(int len);
-  void showtok(); //debugigng
-
-  void errorIn(const char* from);
-  void warningIn(const char* from);
-  void error(int errno);
-  void warning(int errno);
-
-  
-  FILE* file;
-  int lineno;
-  char* ptr;
-  char* buf;
 };
