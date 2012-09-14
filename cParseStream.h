@@ -21,8 +21,7 @@ public:
   cParseStream();
   ~cParseStream();
   
-private:
-  bool handleInclude(int len);
+protected:
    bool reload();
   //ws-related
   bool wsp();

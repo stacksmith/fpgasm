@@ -28,57 +28,11 @@ CLASS::CLASS(){
 }
 CLASS::~CLASS(){
   if(file)
-    fcolse(file);
+    fclose(file);
   free(buf);
 }
 void CLASS::setFile(FILE*f){
   file=f;
-}
-/******************************************************************************
-    handleInclude  
-    
-                                                                   
-******************************************************************************/ 
-bool CLASS::handleInclude(int len){
-  static const char* funcname="handleInclude()";
-  if(tokAnything("#include",len)){
-    ws(true);
-   if('"'==*ptr){
-      cDatum* d = parseQuotedString();
-       /* and the type of the file included is... */
-      char* xdlrc = strstr(d->valStr,".xdlrc");
-      if(xdlrc){
-        if(pDevice){
-          errorIn(funcname);
-          fprintf(stderr,"Device is already included");
-          error(1);
-        }
-        pDevice = new cDevice();
-        pDevice->initialize();
-        pDevice->parse_xdlrc(d->valStr);
-   
-      } else {
-        FILE* f = fopen(d->valStr,"r");
-        if(!f) {
-          errorIn(funcname);
-          fprintf(stderr,"Unable to open file '%s'\n",d->valStr);
-          error(1);
-        }
-        /* to handle reentrant includes, preserve old state */
-        FILE* fold = file;
-        int linenoOld=lineno;
-        lineno=0;
-        parse(f);
-        file=fold;
-        lineno=linenoOld;
-      }
-    } else {
-      errorIn(funcname);
-      fprintf(stderr,"filename must be in quotes");
-      error(1);
-    }
-    return true; //included.
-  } else return false; //not an include...
 }
 
 /******************************************************************************
@@ -359,17 +313,6 @@ void CLASS::validateName(int len){
       fprintf(stderr,"Identifier must not be a reserved word. Check for last ;  \n");
      error(1);
   }    
-}
-void CLASS::validateName(int len,cModule* module){
-  validateName(len);
-  //if another sub exists with this name, error...
-   int i = module->psubs->find(ptr,len);
-   if(-1 != i) {
-     errorIn("validateName()");
-     fprintf(stderr,"Module '%s' already has an inst named '%.*s'",
-       module->name,len,ptr);
-    error(1);
-   }
 }
 /******************************************************************************
  parseLiteral

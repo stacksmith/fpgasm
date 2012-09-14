@@ -18,11 +18,23 @@
 ******************************************************************************/
 #pragma once
 #include "cParseStream.h"
+class cModule;
+class cSub;
+/* While parsing wiring, we generate endpoints.  */
+struct sWireEndpoint {
+  U8 inst;        //index of the instance
+  U8 pindex;      //index of the pin
+  U8 busid1;      //start bus index
+  U8 busid2;      //end   bus index
+};
+
+
 class cParse: public cParseStream {
 public:
   cParse();
   ~cParse();
-  
+   void parse(FILE*f);
+ 
 private:
   void parseModules();
   bool handleInclude(int len);
@@ -32,6 +44,7 @@ private:
   
   void parsePins(cCollection*pins,int dir);
   void parseParamNames(cModule* module);
+  cDatum* parseParamData(cModule*module,const char* prepend);
   sWireEndpoint parseWireEndpoint(cModule* module,int idxInst,cSub*pinst);
   void parseWire(cModule* module,int idxInst,cSub*pinst);
   
