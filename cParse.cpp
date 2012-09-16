@@ -543,7 +543,7 @@ cSub* CLASS::parseSub(cModule* module,int len){
      parseMerge
      following an inst declaration,                                                                           
 ******************************************************************************/ 
-/*void CLASS::parseMerge(cModule*module,cSub* inst){
+void CLASS::parseMerge(cModule*module,cSub* inst){
 fprintf(stderr,"merging inst %s\n",inst->name);
   static const char* funcname="parseMerge";
   if(!inst){
@@ -563,14 +563,14 @@ fprintf(stderr,"merging inst %s\n",inst->name);
   ws(true);int len=cnt();
   while(!tokAnything(";",len)){
     if(tokAnything("input",len)){
-      requireSeparator(funcname,":");
+      optionalColon();
       parsePins(pins,0); //inputs
     }else if(tokAnything("output",len)){
-      requireSeparator(funcname,":");
+      optionalColon();
       parsePins(pins,1); //outputs
     } else if(tokAnything("cfg",len)){
       requireSeparator(funcname,":");
-      cDatum* mergeparm = parseParamData(module);
+      cDatum* mergeparm = parseParamData(module,NULL/*no prepend*/);
       //now rewrite the cfg by merging them
       int ioldcfg = inst->pparams->find("cfg");
       if(-1==ioldcfg){
@@ -581,10 +581,10 @@ fprintf(stderr,"merging inst %s\n",inst->name);
       cDatum* pOldCfg = inst->pparams->data[ioldcfg];
 //fprintf(stderr,"old cfg [%s]\n",pOldCfg->valStr);
      //the length is both strings.  Since only one will start with cfg: -5.
-      int newlen = strlen(mergeparm->valStr) + strlen(pOldCfg->valStr)-5;
+      int newlen = strlen(mergeparm->valStr) + strlen(pOldCfg->valStr);
       char* newCfgStr = (char*)malloc(newlen+1);
       strcpy(newCfgStr,pOldCfg->valStr); //start with old string
-      strcat(newCfgStr,mergeparm->valStr+5); //append new
+      strcat(newCfgStr,mergeparm->valStr); //append new
 //fprintf(stderr,"merge parsed cfg[%s]\n",newCfgStr);
       // Now delete old data
       delete mergeparm;
@@ -608,8 +608,7 @@ fprintf(stderr,"merging inst %s\n",inst->name);
   pins->solidify();
   inst->pins=pins;
 }
-*/
-  /******************************************************************************
+/******************************************************************************
      parseModule
                                                                                 
 ******************************************************************************/ 
@@ -657,9 +656,9 @@ cModule* CLASS::parseModule(){
    if(tokAnything("wire",size)){
     //if(tokWire(size)){
       parseWire(module,idxInst,pinst);
-    }/* else if(tokAnything("merge",size)){
+    } else if(tokAnything("merge",size)){
       parseMerge(module,pinst);
-    }*/ else {
+    } else {
      pinst=parseSub(module,size);
       idxInst++;
     }

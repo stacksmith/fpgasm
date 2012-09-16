@@ -49,7 +49,7 @@ private:
   void parseWire(cModule* module,int idxInst,cSub*pinst);
   
   cSub* parseSub(cModule* module,int len);
-//  void  parseMerge(cModule* module,cSub* pinst);
+  void  parseMerge(cModule* module,cSub* pinst);
   void parsePairs(cModule* module,cSub* sub);
   cModule* parseModule();
   
