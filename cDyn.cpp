@@ -35,8 +35,80 @@ CLASS::CLASS(cSub* ero, cDyn* const pop){
   hero=ero;
   dad=pop;
 }
+CLASS::~CLASS(){};
 
+/*=====================================================================
+======================================================================*/
+/* Ok, here we go.  To output the definitions to XDL we need to walk the tree
+*/
+void CLASS::xdlDefs(){
 
+  if(!hero->type->psubs){
+//hierName(stderr);
+//fprintf(stderr," xdlDefs %p \n",loc);
+//loc->dump(stderr);
+    char* primsite = loc->outputLoc();
+
+    const char* tile = pDevice->tileFor(primsite);
+    //leaf node (primitive).  Output it.
+    fputs("inst \"",fout);
+    hierName(fout);
+    fprintf(fout,"\" \"%s\", placed %s %s,\n",
+      hero->type->name,
+      tile,
+      primsite                    //name like SLICE_XY
+    );
+    // now output the cfgs. They are in a TYPE_CFG collection datatype.
+//pparams->dump(stderr,"PARAMETERS:");  
+    fprintf(fout," cfg \"" );
+    if(pparams){
+      int i;
+      for(i=0;i<pparams->size;i++){
+//        if(0==strncmp("loc",pparams->name[i],3)) continue; //do not output loc as cfg
+        //else 
+        if(0==strcmp("cfg",pparams->name[i])){
+          cCollection* cfgs = pparams->data[i]->valCfgs;
+          int j; for(j=0;j<cfgs->size;j++){
+            fprintf(fout,"%s::%s ",cfgs->name[j],cfgs->data[j]->valStr);
+          }
+        } else {
+          // loc is not interesting to us.
+          if(0==strncmp("loc",pparams->name[i],3))
+            continue; 
+          
+          // cfgfile is of interest here
+          if(0==strncmp("cfgfile",pparams->name[i],7)){
+            FILE*f=fopen(pparams->data[i]->valStr,"r");
+            if(!f){
+              errorIn("expandFile");
+              fprintf(stderr,"Trying to open cfgfile \"%s\"\n",pparams->data[i]->valStr);
+             xerror(-1);
+            }
+            char buf[256];
+            while(fgets(buf,256,f)){
+              fputs(buf,fout);
+            }
+            fclose(f);  
+            continue;
+          }
+          errorIn("xdlDefs()");
+          fprintf(stderr,"encountered parameter named '%s' in primitive '%s'\n",
+           pparams->name[i], hero->name);
+//fprintf(stderr,"dumping parameters:\n");
+//pparams->dump(stderr,"xxx");
+           throw(1);
+        }
+      }
+    }
+    fprintf(fout,"\";\n");
+    // 
+  } else {
+      int i;
+      for(i=0;i<psubcnt;i++){
+        ((CLASS*)psubs[i])->xdlDefs();
+    }
+  }
+}
 /*=====================================================================
 ======================================================================*/
 int CLASS::banglen(char* str,char*fullstr){ //just past the bang
@@ -264,78 +336,7 @@ void CLASS::place(){
 //fprintf(stderr,"loc is %p\n",loc);
 } 
 
-/*=====================================================================
-======================================================================*/
-/* Ok, here we go.  To output the definitions to XDL we need to walk the tree
-*/
-void CLASS::xdlDefs(){
 
-  if(!hero->type->psubs){
-//hierName(stderr);
-//fprintf(stderr," xdlDefs %p \n",loc);
-//loc->dump(stderr);
-    char* primsite = loc->outputLoc();
-
-    const char* tile = pDevice->tileFor(primsite);
-    //leaf node (primitive).  Output it.
-    fputs("inst \"",fout);
-    hierName(fout);
-    fprintf(fout,"\" \"%s\", placed %s %s,\n",
-      hero->type->name,
-      tile,
-      primsite                    //name like SLICE_XY
-    );
-    // now output the cfgs. They are in a TYPE_CFG collection datatype.
-//pparams->dump(stderr,"PARAMETERS:");  
-    fprintf(fout," cfg \"" );
-    if(pparams){
-      int i;
-      for(i=0;i<pparams->size;i++){
-//        if(0==strncmp("loc",pparams->name[i],3)) continue; //do not output loc as cfg
-        //else 
-        if(0==strcmp("cfg",pparams->name[i])){
-          cCollection* cfgs = pparams->data[i]->valCfgs;
-          int j; for(j=0;j<cfgs->size;j++){
-            fprintf(fout,"%s::%s ",cfgs->name[j],cfgs->data[j]->valStr);
-          }
-        } else {
-          // loc is not interesting to us.
-          if(0==strncmp("loc",pparams->name[i],3))
-            continue; 
-          
-          // cfgfile is of interest here
-          if(0==strncmp("cfgfile",pparams->name[i],7)){
-            FILE*f=fopen(pparams->data[i]->valStr,"r");
-            if(!f){
-              errorIn("expandFile");
-              fprintf(stderr,"Trying to open cfgfile \"%s\"\n",pparams->data[i]->valStr);
-             xerror(-1);
-            }
-            char buf[256];
-            while(fgets(buf,256,f)){
-              fputs(buf,fout);
-            }
-            fclose(f);  
-            continue;
-          }
-          errorIn("xdlDefs()");
-          fprintf(stderr,"encountered parameter named '%s' in primitive '%s'\n",
-           pparams->name[i], hero->name);
-//fprintf(stderr,"dumping parameters:\n");
-//pparams->dump(stderr,"xxx");
-           throw(1);
-        }
-      }
-    }
-    fprintf(fout,"\";\n");
-    // 
-  } else {
-      int i;
-      for(i=0;i<psubcnt;i++){
-        psubs[i]->xdlDefs();
-    }
-  }
-}
 /*=====================================================================
  Top-level entry to the wiring part of the process.. 
 ======================================================================*/
@@ -343,19 +344,19 @@ U32 CLASS::seq=0;
 void CLASS::wire(){
   //check for power wires originating here...
   if(psubcnt){
-    wirePower(); //vcc/gnd only for non-prims.
+    xdlWirePower(); //vcc/gnd only for non-prims.
     int i; for(i=0;i<psubcnt;i++){
        psubs[i]->wire();
     }
   } else {
     //Aha-a primitive...Ask the parent to send work on just us,
     //otherwise we will never know who did what.
-    dad->startWires(this);
+    dad->xdlStartWires(this);
   }
 }
 /*=====================================================================
 ======================================================================*/
-void CLASS::startWires(cDyn* prim){
+void CLASS::xdlStartWires(cDyn* prim){
   int refinst=childIndex(prim); //index of child primitive we love...
   cWires* wires = hero->type->pwires;
   cCollection* pins = prim->hero->pins;
@@ -365,7 +366,7 @@ void CLASS::startWires(cDyn* prim){
     wl.getInc(pinst,pindex,busid);
     if(refinst==pinst){ //sourced refinst?
       prim->xdlNetHeader(pins,pindex); //go in one
-      wireInner(pinst,pindex,busid,wl);
+      xdlWireInner(pinst,pindex,busid,wl);
       fprintf(fout,";\n");
     };
     wl.seekNext();
@@ -375,7 +376,7 @@ void CLASS::startWires(cDyn* prim){
 /*=====================================================================
 ======================================================================*/
 //searches up and down!
-void CLASS::wireUpOrDown(int refindex,int busId){
+void CLASS::xdlWireUpOrDown(int refindex,int busId){
   if(!psubs){
     //PRIMITIVE/leaf node... terminate net
     cCollection* pins = hero->pins;
@@ -389,17 +390,17 @@ void CLASS::wireUpOrDown(int refindex,int busId){
       int pinst; int pindex;int busid;
       wl.getInc(pinst,pindex,busid);
       if((pinst==0xFF)&&(pindex==refindex)&&(busid==busId)){
-         wireInner(pinst,pindex,busid,wl);
+         xdlWireInner(pinst,pindex,busid,wl);
       }
       wl.seekNext();
     } //after, try up as well.
-    dad->continueWire(this,refindex,busId);
+    dad->xdlContinueWire(this,refindex,busId);
   }
 }
 //From just above, looks for wires reaching up to us.
 /*=====================================================================
 ======================================================================*/
-void CLASS::continueWire(cDyn* prim,int refindex,int busId){
+void CLASS::xdlContinueWire(cDyn* prim,int refindex,int busId){
 //fprintf(stderr,"continueWire in %s %d\n",hero->name,refindex);
   //using our wires, find the wire from pindex of prim..
   int refinst=childIndex(prim); //index of child primitive we love...
@@ -410,7 +411,7 @@ void CLASS::continueWire(cDyn* prim,int refindex,int busId){
     int pinst; int pindex;int busid;
     wl.getInc(pinst,pindex,busid);
     if((pinst==refinst)&&(pindex==refindex)&&(busid==busId)){
-      wireInner(pinst,pindex,busid,wl);
+      xdlWireInner(pinst,pindex,busid,wl);
     }
     wl.seekNext();
   }
@@ -419,7 +420,7 @@ void CLASS::continueWire(cDyn* prim,int refindex,int busId){
 /*=====================================================================
   Wire the vcc net.  VCCs originate from non-prims only.
 ======================================================================*/
-void CLASS::wirePower(){
+void CLASS::xdlWirePower(){
   cWires* wires = hero->type->pwires;
   cWireList wl=wires->seekFirst();
   while(wl.exists()){
@@ -430,7 +431,7 @@ void CLASS::wirePower(){
         case 0xFF: //vcc
         case 0xFE: //gnd
           xdlNetHeader(0,pindex);
-          wireInner(pinst,pindex,0,wl); //ground and vcc are scalars
+          xdlWireInner(pinst,pindex,0,wl); //ground and vcc are scalars
           fprintf(fout,";\n");
       }
    }
@@ -439,7 +440,7 @@ void CLASS::wirePower(){
 }
 /*=====================================================================
 ======================================================================*/
-void CLASS::wireInner(int pinst,int pindex,int busid,cWireList wl){
+void CLASS::xdlWireInner(int pinst,int pindex,int busid,cWireList wl){
   //we should follow all destinations...
   while(!wl.isLast()){
 //  while(0xFE!=(pinst=*p++)){
@@ -451,7 +452,7 @@ void CLASS::wireInner(int pinst,int pindex,int busid,cWireList wl){
     else
       dyn=psubs[pinst];
     //end wire in wherever
-    dyn->wireUpOrDown(pindex,busid);
+    dyn->xdlWireUpOrDown(pindex,busid);
   }
 }
 /*=====================================================================

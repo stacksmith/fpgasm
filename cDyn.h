@@ -45,26 +45,27 @@ public:
   cDyn(cSub* hero, cDyn* const dad);
   ~cDyn();
   void expand();
-  void xdlDefs();   //output definitions to xdl...
-  void xdlNets();
   void dump(FILE*f);
 //  void hierName();
   void hierName(FILE*f);
   void place();
   void wire();
+  void xdlDefs();   //output definitions to xdl...
   void xdlHeader();
-  void xdlNetHeader(cCollection* pins,int pindex);
-  void xdlNetInpin(cCollection* pins,int pindex);
-private:
+protected:
   char* expandFile(const char* filename);
   void errorIn(const char* from);
   void xerror(int errnox);
   int banglen(char* str,char*fullstr);//length of !...! parameter, str is past !
   cDatum* getLocation();
-  void startWires(cDyn* prim);
-  void continueWire(cDyn* prim,int pindex,int busid);
-  void wireUpOrDown(int pindex,int busid);
-  void wirePower();
-  void wireInner(int pinst,int pindex,int busid,cWireList wl);
+  //xdl-specific
+  void xdlNetHeader(cCollection* pins,int pindex);
+  void xdlNetInpin(cCollection* pins,int pindex);
+  void xdlStartWires(cDyn* prim);
+  void xdlContinueWire(cDyn* prim,int pindex,int busid);
+  void xdlWireUpOrDown(int pindex,int busid);
+  void xdlWirePower();
+  void xdlWireInner(int pinst,int pindex,int busid,cWireList wl);
   int childIndex(cDyn*p);
 };
+  

@@ -52,5 +52,6 @@ private:
   void  parseMerge(cModule* module,cSub* pinst);
   void parsePairs(cModule* module,cSub* sub);
   cModule* parseModule();
-  
+//data  
+  cModule* topModule; //keep track of the last module - it is top.
 };
