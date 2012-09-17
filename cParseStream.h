@@ -55,8 +55,8 @@ protected:
 
   void errorIn(const char* from);
   void warningIn(const char* from);
-  void error(int errno);
-  void warning(int errno);
+  void error(int xerrno);
+  void warning(int xerrno);
 
 //and the data  
   FILE* file;

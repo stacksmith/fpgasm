@@ -58,7 +58,7 @@ public:
 private:
   char* expandFile(const char* filename);
   void errorIn(const char* from);
-  void error(int errno);
+  void xerror(int errnox);
   int banglen(char* str,char*fullstr);//length of !...! parameter, str is past !
   cDatum* getLocation();
   void startWires(cDyn* prim);

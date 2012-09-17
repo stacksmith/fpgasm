@@ -50,6 +50,6 @@ private:
   cCollection sites; //map sitename like SLICE_X?Y? to tilename R?C?
   //GHashTable *htPrims;  // map primnames like IOB to cPrim objects
   void errorIn(const char* function);
-  void error(int errno);
+  void error(U32 xerrno);
   
 };

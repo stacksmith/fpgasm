@@ -382,7 +382,7 @@ void CLASS::warningIn(const char* from){
    fprintf(stderr,"Warning occured in line %d:\n",lineno);
  
 }
-void CLASS::error(int errno){
+void CLASS::error(int xerrno){
    int spaces = ptr-buf;
   fprintf(stderr,"\n%s",buf);        //print line, complete with cr
    while(spaces--)
@@ -390,9 +390,9 @@ void CLASS::error(int errno){
   fputc('^',stderr);
   fputs("\n",stderr);
  fprintf(stderr,"----------------------------------------------------------------------\n");
-  throw(errno);
+  throw(xerrno);
 }
-void CLASS::warning(int errno){
+void CLASS::warning(int xerrno){
    int spaces = ptr-buf;
   fprintf(stderr,"\n%s",buf);        //print line, complete with cr
    while(spaces--)
