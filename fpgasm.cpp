@@ -82,7 +82,7 @@ int main(int argc,char** argv){
   dynroot->xdlHeader();
 
   dynroot->xdlDefs();
-  dynroot->wire();
+  dynroot->xdlWire();
 
   return 0;
 }

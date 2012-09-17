@@ -49,16 +49,20 @@ public:
 //  void hierName();
   void hierName(FILE*f);
   void place();
-  void wire();
+  //xdl-specific, see cDynXdl.cpp
+  void xdlWire();
   void xdlDefs();   //output definitions to xdl...
   void xdlHeader();
+  //verilog-specific
+  void vlogDefs();
 protected:
   char* expandFile(const char* filename);
   void errorIn(const char* from);
   void xerror(int errnox);
   int banglen(char* str,char*fullstr);//length of !...! parameter, str is past !
   cDatum* getLocation();
-  //xdl-specific
+  int childIndex(cDyn*p);
+  //xdl-specific, see cDynXdl.cpp
   void xdlNetHeader(cCollection* pins,int pindex);
   void xdlNetInpin(cCollection* pins,int pindex);
   void xdlStartWires(cDyn* prim);
@@ -66,6 +70,5 @@ protected:
   void xdlWireUpOrDown(int pindex,int busid);
   void xdlWirePower();
   void xdlWireInner(int pinst,int pindex,int busid,cWireList wl);
-  int childIndex(cDyn*p);
 };
   
