@@ -21,4 +21,4 @@
      cWireList.cpp \
      -Wall  -fpack-struct -o fpgasm  
 #CHANGE THIS LINE to your preferred PATH-visible directory
-cp fpgasm ~/Portable/bin
+cp fpgasm ~/bin

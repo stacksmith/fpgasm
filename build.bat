@@ -21,4 +21,4 @@ REM ****************************************************************************
      cWireList.cpp ^
      -Wall  -fpack-struct -o fpgasm  
 REM CHANGE THIS LINE to your preferred PATH-visible directory
-REM cp fpgasm ~/Portable/bin
+copy fpgasm.exe C:\WINDOWS\fpgasm.exe

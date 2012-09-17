@@ -24,6 +24,7 @@ CLASS::CLASS(){
   file=0;
   buf=(char*)malloc(1024);
   ptr=buf;
+  *ptr=0;		//will force a reload.
   lineno=0;
 }
 CLASS::~CLASS(){
