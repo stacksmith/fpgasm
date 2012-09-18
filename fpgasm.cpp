@@ -94,6 +94,7 @@ int main(int argc,char** argv){
         fprintf(stderr,"Success! %s generated\n",argv[2]);
         break;
       case verilog:
+        dynroot->verilogDefs();
         break;
     }
   }

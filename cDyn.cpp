@@ -46,7 +46,7 @@ int CLASS::banglen(char* str,char*fullstr){ //just past the bang
     errorIn("banglen()");
    fprintf(stderr,"Argument value '%s' is missing the closing !",
         fullstr); 
-    xerror(1);
+    error(1);
   }
   return nextbang-str;
 }
@@ -63,7 +63,7 @@ char* CLASS::expandFile(const char* filename){
   if(-1==f){
     errorIn("expandFile");
     fprintf(stderr,"Trying to open cfgfile \"%s\"\n",filename);
-    xerror(-1);
+    error(-1);
   }
   char* data = (char*)malloc(0x10000);
   strcpy(data,"cfg: ");
@@ -130,7 +130,7 @@ void CLASS::expand(){
       fprintf(stderr,"named '%.*s'",blen,src);
       //Argument value !%.*s! requires module %s to have such a parameter named %s"
       //              ,blen,val->valStr,hero->type->name,pname);
-      xerror(1);
+      error(1);
               }
               src+=blen;  //In source string !xxx!, skip it
               src++; //skip the ! too
@@ -186,7 +186,7 @@ void CLASS::expand(){
 errorIn("expand()");
 fprintf(stderr,"Module '%s' stores an invalid inst (seq %d)\n",
         hero->type->name,i);
-xerror(1);
+error(1);
                   }
         cSub* sub = dat->valSub;
     //do whatever expansion here
@@ -232,7 +232,7 @@ void CLASS::place(){
           case TYPE_LOCABS:
             errorIn("place()");
             fprintf(stderr,"cDyn::place(): %s has an absolute location; %s cannot be relative\n",dad->hero->name,hero->name);
-            xerror(1);
+            error(1);
             break;
           case TYPE_LOCXY: //dad is xy, so adjust...
             loc->valX += dad->loc->valX;
@@ -241,18 +241,18 @@ void CLASS::place(){
           default:
             errorIn("place()");
             fprintf(stderr,"cDyn:place %s invalid loc type %d\n",hero->name,dad->loc->type);
-            xerror(1);
+            error(1);
         }
       } else {
         errorIn("place()");
         fprintf(stderr,"cDyn:place %s has no parent and cannot be placed\n",hero->name);
-        xerror(1);
+        error(1);
       }
       break;
     default:
       errorIn("place()");
       fprintf(stderr,"loc type of %s not ABS or XY, it is %d\n",hero->name,hloc->type);
-      xerror(1);
+      error(1);
       break;
     }
   }
@@ -317,7 +317,7 @@ void CLASS::errorIn(const char* from){
   fprintf(stderr,"----------------------------------------------------------------------\n");
   fprintf(stderr,"Error in function cDyn::%s\n",from);
 }
-void CLASS::xerror(int errnox){
+void CLASS::error(int errnox){
   fprintf(stderr,"\nError occured in definition of module '%s' instance '%s'\n",
     dad->hero->type->name, hero->name);
   fputs("while processing '",stderr);
@@ -329,3 +329,4 @@ void CLASS::xerror(int errnox){
 
 
 #include "cDynXdl.cpp"
+#include "cDynVerilog.cpp"

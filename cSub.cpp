@@ -63,7 +63,10 @@ cDatum* CLASS::getLocation(){
 ******************************************************************************/ 
 void CLASS::dump(FILE*f){
   fprintf(f,"sub '%s' ",name);
-  pparams->dump(f,"params:\n");
+  if(pparams==0)
+    fprintf(stderr,"NULL params\n");
+  else
+    pparams->dump(f,"params:\n");
 }
 
 

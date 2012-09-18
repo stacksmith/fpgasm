@@ -27,7 +27,7 @@
 */
 void CLASS::xdlDefs(){
 
-  if(!hero->type->psubs){
+  if(hero->type->isPrimitive()){
 //hierName(stderr);
 //fprintf(stderr," xdlDefs %p \n",loc);
 //loc->dump(stderr);
@@ -66,7 +66,7 @@ void CLASS::xdlDefs(){
             if(!f){
               errorIn("expandFile");
               fprintf(stderr,"Trying to open cfgfile \"%s\"\n",pparams->data[i]->valStr);
-             xerror(-1);
+             error(-1);
             }
             char buf[256];
             while(fgets(buf,256,f)){

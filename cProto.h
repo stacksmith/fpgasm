@@ -17,10 +17,6 @@
     along with FPGAsm.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #pragma once
-/******************************************************************************
- Primitive Definition
-  PrimDef is the low-level building block of the FPGA. It exports names of pins
-******************************************************************************/
 class cDyn;
 class cModule;
 class cWires;
@@ -29,6 +25,7 @@ public:
    cProto(char*name,int size);
   ~cProto();
    void dump(FILE*f);
+   bool isPrimitive();
   
   // data
   char* name;       //name of this module/primitive...

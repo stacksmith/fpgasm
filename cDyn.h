@@ -54,11 +54,11 @@ public:
   void xdlDefs();   //output definitions to xdl...
   void xdlHeader();
   //verilog-specific see cDynVlog.cpp
-  void vlogDefs();
+  void verilogDefs();
 protected:
   char* expandFile(const char* filename);
   void errorIn(const char* from);
-  void xerror(int errnox);
+  void error(int errnox);
   int banglen(char* str,char*fullstr);//length of !...! parameter, str is past !
   cDatum* getLocation();
   int childIndex(cDyn*p);
