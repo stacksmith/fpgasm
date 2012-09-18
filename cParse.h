@@ -34,6 +34,8 @@ public:
   cParse();
   ~cParse();
    void parse(FILE*f);
+//data
+   cModule* topModule; //keep track of the last module - it is top.
  
 private:
   void parseModules();
@@ -53,5 +55,4 @@ private:
   void parsePairs(cModule* module,cSub* sub);
   cModule* parseModule();
 //data  
-  cModule* topModule; //keep track of the last module - it is top.
 };

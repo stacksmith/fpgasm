@@ -53,7 +53,7 @@ public:
   void xdlWire();
   void xdlDefs();   //output definitions to xdl...
   void xdlHeader();
-  //verilog-specific
+  //verilog-specific see cDynVlog.cpp
   void vlogDefs();
 protected:
   char* expandFile(const char* filename);

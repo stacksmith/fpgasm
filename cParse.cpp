@@ -26,6 +26,7 @@
 extern cDevice* pDevice;
 #include "cWires.h"
 CLASS::CLASS(){
+  topModule = NULL;
 }
 CLASS::~CLASS(){
 }
@@ -714,6 +715,12 @@ void CLASS::parseModules(){
 void CLASS::parse(FILE*f){
   setFile(f);
   parseModules();
+  //Make sure we did anything
+  if(!topModule){
+    errorIn("parse");
+    fprintf(stderr,"No modules defined\n");
+    error(-1);
+  }
 }
 
 void CLASS::validateName(int len,cModule* module){

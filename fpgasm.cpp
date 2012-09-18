@@ -24,65 +24,83 @@
 #include "cSub.h"
 #include "stdlib.h"
 
+enum outputType {
+  verilog,  xdl
+};
+outputType otype; //type of output- verilog or xdl
 cDevice *pDevice;
 #include "malloc.h"
 int main(int argc,char** argv){
-  FILE* fout = stdout;
 
 //  ;GMainLoop*  gmloop;
 //  gmloop = g_main_loop_new (NULL, TRUE);
 //  
 //  g_main_loop_run(gmloop);
   fprintf(stderr,"\nFPGAsm 0.1 (c) 2012 Victor Yurkovsky \n");
-  if(argc<2){
-    printf("Usage: fpgasm <filename.ham> \n");
+  if(argc!=3){
+    printf("Usage: fpgasm <inname.fa> <outname.[v|xdl] \n");
     exit(1);
   }
-  if(argc==3){
-    fout = fopen(argv[2],"w");
-    if(!fout){
-      fprintf(stderr,"Unable to open %s for output\n",argv[2]);
-      exit(1);
-    }
-  }
-  pDevice = 0;
-  
 //  pDevice = new cDevice();
 //  pDevice->initialize();
 //  pDevice->parse_xdlrc("xc3s200ft256.xdlrc");
 //  pDevice->listProtos();
   FILE* fin = (fopen(argv[1],"r"));
   if(!fin){
-    fprintf(stderr,"Unable to open %s for input\n",argv[1]);
+    fprintf(stderr,"Error. Unable to open %s for input\n",argv[1]);
     exit(1);
   }
+  FILE* fout = stdout;
+  fout = fopen(argv[2],"w");
+  if(!fout){
+    fprintf(stderr,"Error. Unable to open %s for output\n",argv[2]);
+    exit(1);
+  }
+  char* dot = strrchr(argv[2],'.');
+  if(!dot){
+    fprintf(stderr,"Error. Output file must have a .v or .xdl suffix\n");
+    exit(1);
+  }
+  if(0==strcmp(dot,".xdl")) otype=xdl;
+  else if(0==strcmp(dot,".v")) otype=verilog;
+  else {
+    fprintf(stderr,"Error. Output file must have a .v or .xdl suffix\n");
+    exit(1);
+  }  
+  
+  pDevice = NULL;
   cParse* parser = new cParse();
   try {
     parser->parse(fin);
+//fprintf(stderr,"parse() completed\n");
+    cModule* root = parser->topModule;
+    //(cModule*)pDevice->findProto((char*)"top",3); 
+//dynamic tree...  First create a fake sub for the root
+    cSub* subroot = new cSub(root->name,strlen(root->name));
+    subroot->type=root;
+    subroot->pparams=0;
+    cDyn*dynroot=new cDyn(subroot,0);
+    dynroot->fout = fout;
+    dynroot->expand();
+    dynroot->place();
+    /* Determine the requested output type */
+//fprintf(stderr,argv[2]);
+    switch(otype){
+      case xdl:
+        // now, if the output file is .xdl, output xdl.
+        dynroot->xdlHeader();
+        dynroot->xdlDefs();
+        dynroot->xdlWire();
+        fprintf(stderr,"Success! %s generated\n",argv[2]);
+        break;
+      case verilog:
+        break;
+    }
   }
   catch(int i){
 //    fprintf(stderr,"CAUGHT %d\n",i);
     exit(i);
   }
-//fprintf(stderr,"parse() completed\n");
-  cModule* root = (cModule*)pDevice->findProto((char*)"top",3); 
-//dynamic tree...  First create a fake sub for the root
-  cSub* subroot = new cSub(root->name,strlen(root->name));
-  subroot->type=root;
-  //subroot->loc=cDatum::newLocXY(0,0);
-  subroot->pparams=0;
-  //expand
-  cDyn*dynroot=new cDyn(subroot,0);
-  dynroot->fout = fout;
-
-//fprintf(stderr,"expand started\n");
-  dynroot->expand();
-//fprintf(stderr,"expand completed\n");
-  dynroot->place();
-  dynroot->xdlHeader();
-
-  dynroot->xdlDefs();
-  dynroot->xdlWire();
 
   return 0;
 }
