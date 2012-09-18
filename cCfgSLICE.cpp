@@ -17,4 +17,24 @@
     along with FPGAsm.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #include "global.h"
-#define CLASSS cCfgSLICE
+#include "cCfgSLICE.h"
+#include "cDyn.h"
+#define CLASS cCfgSLICE
+void CLASS::verilogLoc(FILE* fout,cDatum* loc){
+  fputs("(*LOC=\"",fout);
+  loc->outputLoc(fout);
+  fputs("\" *)",fout);
+}
+void CLASS::verilog(FILE* fout,cDyn* dyn){
+  // is there a G BEL?
+  int i = find("G");
+  if(-1!=i){
+    verilogLoc(fout,dyn->loc);
+    fputs("(* BEL=\"G\"*) //",fout);
+    dyn->hierName(fout);
+    fputs("\n",fout);
+     //if the G value is 0x????, it's a lut4
+  } else {
+    fprintf(stderr,"not yet finished\n");
+  }
+}

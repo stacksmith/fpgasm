@@ -24,9 +24,12 @@
  this, just casting an existing collection in cDyn
 ******************************************************************************/
 //class cDatum; //global.h always includes cDatumc & Collection.h
+class cDyn;
 class cCfgSLICE:public cCollection{
 private:
    cCfgSLICE(){};
-  ~cCollection(){};
+  ~cCfgSLICE(){};
 public:
+  void verilogLoc(FILE*fout,cDatum*loc);
+  void verilog(FILE*fout,cDyn* dyn);
 };
