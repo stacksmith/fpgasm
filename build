@@ -18,7 +18,7 @@
 #******************************************************************************/
  g++ fpgasm.cpp cDatum.cpp cCollection.cpp cProto.cpp cPrim.cpp cDevice.cpp \
      cModule.cpp cSub.cpp cDyn.cpp cParseStream.cpp cParse.cpp cWires.cpp \
-     cWireList.cpp \
+     cWireList.cpp cCfgSLICE.cpp \
      -Wall  -fpack-struct -o fpgasm  
 #CHANGE THIS LINE to your preferred PATH-visible directory
 cp fpgasm ~/bin
