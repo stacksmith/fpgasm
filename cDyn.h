@@ -70,5 +70,7 @@ protected:
   void xdlWireUpOrDown(int pindex,int busid);
   void xdlWirePower();
   void xdlWireInner(int pinst,int pindex,int busid,cWireList wl);
+  //verilog-specific, see cDynVerilog.cpp
+  void verilogLoc(); 
 };
   

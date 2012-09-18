@@ -302,6 +302,20 @@ throw(1);
   }
   return buf;
 }
+char* CLASS::outputLoc(FILE*f){
+  switch(type){
+    case TYPE_STR:
+      fputs(valStr,f);
+      break;
+    case TYPE_LOCXY:
+      fprintf(f,"SLICE_X%dY%d",valX,valY);
+      break;
+    default:
+fprintf(stderr,"cCollection:outputLoc - Not a location!\n");
+throw(1);
+  }
+  return buf;
+}
 void CLASS::dump(FILE*f){
   switch(type){
     case TYPE_INT: fprintf(f,"int:%d ",valInt);break;

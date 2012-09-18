@@ -27,10 +27,36 @@ the BELs and the bel wiring for the primitives.
 Wiring is different also - instead of trolling for primitive endpoints,
 we start at the top module and trace the wiring from its input/outputs.
 ======================================================================*/
+void CLASS::verilogLoc(){
+  fputs("(*LOC=\"",fout);
+  loc->outputLoc(fout);
+  fputs("\" *)",fout);
+}
 void CLASS::verilogDefs(){
   if(hero->type->isPrimitive()){
     //A primitive.  Let's output it if we can.
     if(0==strncmp("SLICE",hero->type->name,5)){ //any kind of slice
+      //get the cfg for this dyn
+      int icfg = pparams->find("cfg");
+      if(-1==icfg){
+        errorIn("verilogDefs");
+        fprintf(stderr,"No cfg parameters in %s\n", hero->name);
+        error(-1);
+      }
+      cCollection* cfg = pparams->data[icfg]->valCfgs;
+      // is there a G BEL?
+      int i = cfg->find("G");
+      if(-1!=i){
+        verilogLoc();
+        fputs("(* BEL=\"G\"*) //",fout);
+        hierName(fout);
+        fputs("\n",fout);
+        //if the G value is 0x????, it's a lut4
+      }
+
+
+// fprintf(stderr,"cfg is at %p\n",cfg);
+// cfg->dump(stderr);
       return;
     }
     errorIn("verilogDefs");

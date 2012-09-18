@@ -77,7 +77,8 @@ public:
   static cDatum* newParSub(const char* val,int len);
   static cDatum* newUnrealized(const char* str,int len);
   
-  char* outputLoc(); //proper SLICE_X..Y.. or abs
+  char* outputLoc(); //TODO: get rid of this
+  char* outputLoc(FILE*f); //proper SLICE_X..Y.. or abs
   void  realize();
   void  realize1();
 private:
