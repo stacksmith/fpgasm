@@ -33,7 +33,13 @@ void CLASS::verilog(FILE* fout,cDyn* dyn){
     fputs("(* BEL=\"G\"*) //",fout);
     dyn->hierName(fout);
     fputs("\n",fout);
-     //if the G value is 0x????, it's a lut4
+    char* gstring=data[i]->valStr;
+fputs(gstring,stderr);
+    if(0==strncmp(gstring,"#LUT:D=0x",9)) {
+      //processing a lut. 0x????, means use all 4 inputs.
+      fprintf(fout,"LUT4 #(.INIT(16'h%s)) ",gstring+9);
+      dyn->hierName(fout);
+    }
   } else {
     fprintf(stderr,"not yet finished\n");
   }

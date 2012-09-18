@@ -54,7 +54,7 @@ public:
   void xdlDefs();   //output definitions to xdl...
   void xdlHeader();
   //verilog-specific see cDynVlog.cpp
-  void verilogDefs();
+  void verilog();
 protected:
   char* expandFile(const char* filename);
   void errorIn(const char* from);
@@ -71,6 +71,6 @@ protected:
   void xdlWirePower();
   void xdlWireInner(int pinst,int pindex,int busid,cWireList wl);
   //verilog-specific, see cDynVerilog.cpp
-  //void verilogLoc(); 
+  void verilogDefs(); 
 };
   

@@ -320,7 +320,7 @@ void CLASS::dump(FILE*f){
   switch(type){
     case TYPE_INT: fprintf(f,"int:%d ",valInt);break;
     case TYPE_STR: fprintf(f,"str:\"%s\" ",valStr);break;
-    case TYPE_PIN: fprintf(f,"pin:%s ",valInt?"output":"input");break;
+    case TYPE_PIN: fprintf(f,"pin: ");break;
     case TYPE_SUB: valSub->dump(f); break;
     case TYPE_LOCXY:
       fprintf(f,"(%d,%d) ",valX,valY); break;

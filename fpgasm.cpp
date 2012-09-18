@@ -79,6 +79,7 @@ int main(int argc,char** argv){
     cSub* subroot = new cSub(root->name,strlen(root->name));
     subroot->type=root;
     subroot->pparams=0;
+    subroot->pins=root->pins; //these will not be changed, copy by ref
     cDyn*dynroot=new cDyn(subroot,0);
     dynroot->fout = fout;
     dynroot->expand();
@@ -94,7 +95,7 @@ int main(int argc,char** argv){
         fprintf(stderr,"Success! %s generated\n",argv[2]);
         break;
       case verilog:
-        dynroot->verilogDefs();
+        dynroot->verilog();
         break;
     }
   }

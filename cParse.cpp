@@ -87,6 +87,7 @@ bool CLASS::handleInclude(int len){
                                                                    
 ******************************************************************************/ 
 void CLASS::parsePins(cCollection* pins,int dir){
+if(dir>1) fprintf(stderr,"FUCK ME\n");
   ws(true);
   int len=requireWord("(",1);
   ws(true);

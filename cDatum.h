@@ -40,6 +40,7 @@ enum eDatumType {
 class cSub;
 class cProto;  
 class cCollection;
+
 class cDatum{
 public:
   eDatumType type:8;
