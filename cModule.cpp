@@ -112,8 +112,28 @@ void CLASS::vlogWiring(FILE*fout){
       int dInst; int dIndex;int dBusid;
       wl.getInc(dInst,dIndex,dBusid);
 fprintf(fout,"to %d %d %d\n",dInst,dIndex,dBusid);
-      fputs("assign ",fout);
-      
+      //Now, verilog-style assigns. Destination cannot be a power net.
+      fputs("  assign ",fout);
+      if(0xFF==dInst){
+        //destination is "MY" pin
+        fprintf(fout,"%s_%s=",name,pins->name[dIndex]);
+      }else{
+        fprintf(fout,"%s_%s=",psubs->name[dInst],psubs->data[dInst]->valSub->pins->name[dIndex]);
+      }
+      //now source, RHS
+      if(0xFF==sInst){
+        //source is "MY" pin.  The pin can also be a power net
+        switch(sIndex){
+          case 0xFF: /*vcc*/ fputs("vcc",fout); break;
+          case 0xFE: /*gnd*/ fputs("gnd",fout); break;
+          default:
+            fprintf(fout,"%s_%s",name,pins->name[sIndex]);
+            break;
+        }
+      }else{
+        fprintf(fout,"%s_%s",psubs->name[sInst],psubs->data[sInst]->valSub->pins->name[sIndex]);
+      }
+      fputs(";\n",fout);
     }
     wl.seekNext();  //next wire
   }
