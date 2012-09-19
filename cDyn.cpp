@@ -326,7 +326,16 @@ void CLASS::error(int errnox){
   fprintf(stderr,"----------------------------------------------------------------------\n");
   throw(errnox);
 }
-
+/*=====================================================================
+ top module not connected
+ While generating xdl, we found that the top module is not connected.
+ TODO:This is normally an error, but what about macros?  
+======================================================================*/
+void CLASS::errTopModuleNotConnected(const char* from,const char* pin){
+  errorIn(from);
+  fprintf(stderr,"Top module's pin %s is not connected\n",pin);
+  error(-1);
+}
 
 #include "cDynXdl.cpp"
 #include "cDynVerilog.cpp"

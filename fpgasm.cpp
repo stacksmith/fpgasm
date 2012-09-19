@@ -36,7 +36,7 @@ int main(int argc,char** argv){
 //  gmloop = g_main_loop_new (NULL, TRUE);
 //  
 //  g_main_loop_run(gmloop);
-  fprintf(stderr,"\nFPGAsm 0.1 (c) 2012 Victor Yurkovsky \n");
+  fprintf(stderr,"\nFPGAsm 0.11 (c) 2012 Victor Yurkovsky \n");
   if(argc!=3){
     printf("Usage: fpgasm <inname.fa> <outname.[v|xdl] \n");
     exit(1);
@@ -80,9 +80,11 @@ int main(int argc,char** argv){
     switch(otype){
       case xdl: {
         //dynamic tree...  First create a fake sub for the root
+
         cSub* subroot = new cSub(root->name,strlen(root->name));
         subroot->type=root;
         subroot->pparams=0;
+        subroot->pins=root->pins;
         cDyn*dynroot=new cDyn(subroot,0);
         dynroot->fout = fout;
         dynroot->expand();

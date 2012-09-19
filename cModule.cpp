@@ -86,7 +86,37 @@ void CLASS::verilog(FILE*fout){
       //fprintf(fout,"(*RLOC="
       fprintf(fout,"  %s ",sub->type->name);
       fprintf(fout," %s(",sub->name);
+      sub->pins->vlogPins(fout,sub->name); //output the pins in parens
+      fputs(");\n",fout);
     }
   }
+  // wire up our module
+  vlogWiring(fout);
+  fputs("\n",fout);
   fputs("endmodule\n",fout);
+}
+/******************************************************************************
+ At this point we defined the module's instances, and declared all inst inputs
+ and outputs as verilog wires.  Now the module wiring can connect them all!
+******************************************************************************/
+void CLASS::vlogWiring(FILE*fout){
+  fprintf(fout,"WIRING GOES HERE\n");
+  cWireList wl = pwires->seekFirst();
+  while(wl.exists()){
+    //more wires exist.
+    //source
+    int sInst; int sIndex;int sBusid;
+    wl.getInc(sInst,sIndex,sBusid);
+    fprintf(fout,"from %d %d %d\n",sInst,sIndex,sBusid);
+    while(!wl.isLast()){
+      int dInst; int dIndex;int dBusid;
+      wl.getInc(dInst,dIndex,dBusid);
+fprintf(fout,"to %d %d %d\n",dInst,dIndex,dBusid);
+      fputs("assign ",fout);
+      
+    }
+    wl.seekNext();  //next wire
+  }
+
+  
 }

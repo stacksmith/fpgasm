@@ -191,6 +191,8 @@ void CLASS::vlogWireDefs(FILE*f,const char*prefix){
 /******************************************************************************
  vlogPinDefs
  create wire defintions from pins.
+ input a,
+ output b
 ******************************************************************************/
 void CLASS::vlogPinDefs(FILE*f){
   int i; for(i=0;i<size;i++){
@@ -208,4 +210,19 @@ void CLASS::vlogPinDefs(FILE*f){
       fputs("\n",f);
   }
   
+}
+/******************************************************************************
+ vlogPins
+ just list the pins for an inst,comma-sep
+ a,b,c
+******************************************************************************/
+void CLASS::vlogPins(FILE*f,const char*prefix){
+  int i; for(i=0;i<size;i++){
+    U32 buswidth = data[i]->pinBusWidth;
+    fprintf(f,"%s_%s",prefix,name[i]);
+    if(buswidth>1)
+      fprintf(f,"[%d:0]",buswidth);
+    if(i!=size-1)
+      fputs(",",f);
+  }
 }

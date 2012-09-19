@@ -106,7 +106,12 @@ void CLASS::xdlWire(){
   } else {
     //Aha-a primitive...Ask the parent to send work on just us,
     //otherwise we will never know who did what.
-    dad->xdlStartWires(this);
+    if(dad)
+      dad->xdlStartWires(this);
+    else{
+      errorIn(__func__);
+      fprintf(stderr,"dyn instance %s has no parent\n",hero->name);
+    }
   }
 }
 /*=====================================================================
@@ -125,13 +130,13 @@ void CLASS::xdlStartWires(cDyn* prim){
       fprintf(fout,";\n");
     };
     wl.seekNext();
-
   }
 }
 /*=====================================================================
 ======================================================================*/
 //searches up and down!
 void CLASS::xdlWireUpOrDown(int refindex,int busId){
+//fprintf(stderr,"xdlWireUpOrDown(%d,%d)\n",refindex,busId);
   if(!psubs){
     //PRIMITIVE/leaf node... terminate net
     cCollection* pins = hero->pins;
@@ -142,21 +147,25 @@ void CLASS::xdlWireUpOrDown(int refindex,int busId){
     cWires* wires = hero->type->pwires;
     cWireList wl=wires->seekFirst();
     while(wl.exists()){
-      int pinst; int pindex;int busid;
+     int pinst; int pindex;int busid;
       wl.getInc(pinst,pindex,busid);
       if((pinst==0xFF)&&(pindex==refindex)&&(busid==busId)){
          xdlWireInner(pinst,pindex,busid,wl);
       }
       wl.seekNext();
-    } //after, try up as well.
-    dad->xdlContinueWire(this,refindex,busId);
+   } //after, try up as well.
+    if(dad)
+      dad->xdlContinueWire(this,refindex,busId);
+    // else top module not connected...
+    else
+      errTopModuleNotConnected(__func__,hero->pins->name[refindex]);
   }
 }
 //From just above, looks for wires reaching up to us.
 /*=====================================================================
 ======================================================================*/
 void CLASS::xdlContinueWire(cDyn* prim,int refindex,int busId){
-//fprintf(stderr,"continueWire in %s %d\n",hero->name,refindex);
+//fprintf(stderr,"xdlContinueWire(%s,%d,%d)\n",prim->hero->name,refindex,busId);
   //using our wires, find the wire from pindex of prim..
   int refinst=childIndex(prim); //index of child primitive we love...
   cWires* wires = hero->type->pwires;
@@ -197,9 +206,8 @@ void CLASS::xdlWirePower(){
 ======================================================================*/
 void CLASS::xdlWireInner(int pinst,int pindex,int busid,cWireList wl){
   //we should follow all destinations...
+//fprintf(stderr,"xdlWireInner(%d,%d,%d,%p)\n",pinst,pindex,busid,wl.wp);
   while(!wl.isLast()){
-//  while(0xFE!=(pinst=*p++)){
-//    pindex=*p++;
     wl.getInc(pinst,pindex,busid);
     cDyn* dyn;
     if(pinst==0xFF)

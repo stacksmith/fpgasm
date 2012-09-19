@@ -46,7 +46,9 @@ public:
   cDatum* getDatum(int i);
   void dump(FILE*f,const char*name);
   void vlogWireDefs(FILE*f,const char*prefix);
-  void vlogPinDefs(FILE*f);  
+  void vlogPinDefs(FILE*f); 
+  void vlogPins(FILE*f,const char*prefix); 
+  
 //DATA:
   char** name;
   cDatum** data;

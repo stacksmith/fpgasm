@@ -33,5 +33,6 @@ public:
   void dump(FILE*f);
   //cCollection pins;  //from cProto
   virtual void verilog(FILE*f);
+  void vlogWiring(FILE*f);
 // Data
 };

@@ -59,6 +59,8 @@ protected:
   char* expandFile(const char* filename);
   void errorIn(const char* from);
   void error(int errnox);
+  void errTopModuleNotConnected(const char* from, const char*pin);
+  
   int banglen(char* str,char*fullstr);//length of !...! parameter, str is past !
   cDatum* getLocation();
   int childIndex(cDyn*p);
