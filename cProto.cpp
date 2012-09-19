@@ -32,6 +32,7 @@ CLASS::CLASS(char* nam,int size)
 #endif
   psubs=0;
   pwires=0;
+  converted=false; //for the verilog converter
  // pins=new cCollection();
 }
 CLASS::~CLASS(){

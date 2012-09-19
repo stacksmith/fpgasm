@@ -32,4 +32,6 @@ public:
  // virtual cProto** subs(); //return count of subs, see cDyn expansion
   void dump(FILE*f);
   //cCollection pins;  //from cProto
+  virtual void verilog(FILE*f);
+// Data
 };

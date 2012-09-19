@@ -82,6 +82,7 @@ public:
   char* outputLoc(FILE*f); //proper SLICE_X..Y.. or abs
   void  realize();
   void  realize1();
+ 
 private:
   static char*buf;   //a buffer for outputting location strings
   char*   parseLiteral(char*start,S32*presult);

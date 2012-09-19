@@ -36,4 +36,8 @@ CLASS::~CLASS()
   //g_hash_table_destroy(cfg);
 }
 
+void CLASS::verilog(FILE*f){
+ fprintf(f,"PRIMITIVE %s NOT YET IMPLEMENTED\n",name);
+  
+}
 

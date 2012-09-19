@@ -26,6 +26,8 @@ class cPrim : public cProto{
 public:
    cPrim(char*name,int len);
   ~cPrim();
+  virtual void verilog(FILE*f);
+
   cCollection* cfgval;    //for validation, cfg names and possible values
 private: 
 };

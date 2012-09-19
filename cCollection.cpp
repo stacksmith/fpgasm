@@ -175,5 +175,37 @@ void CLASS::setdebugname(char*name,int len){
   debugname[len]=0;
 }
 #endif
+/******************************************************************************
+ vlogWireDefs
+ create wire defintions from pins.
+******************************************************************************/
+void CLASS::vlogWireDefs(FILE*f,const char*prefix){
+  int i; for(i=0;i<size;i++){
+    fputs(" wire ",f);
+    U32 buswidth = data[i]->pinBusWidth;
+    if(buswidth>1)
+      fprintf(f,"[%d:0] ",buswidth);
+    fprintf(f,"%s_%s;\n",prefix,name[i]);
+  }
+}
+/******************************************************************************
+ vlogPinDefs
+ create wire defintions from pins.
+******************************************************************************/
+void CLASS::vlogPinDefs(FILE*f){
+  int i; for(i=0;i<size;i++){
+    cDatum* pin = data[i];
+    if(pin->pinDir)
+      fputs("  output ",f);
+    else
+      fputs("  input ",f);
+    if(pin->pinBusWidth>1)
+      fprintf(f,"[%d:0] ",pin->pinBusWidth-1);
+    fputs(name[i],f);
+    if(i!=size-1)
+      fputs(",\n",f);
+    else
+      fputs("\n",f);
+  }
   
-
+}

@@ -20,6 +20,7 @@
 #include "cModule.h"
 #include "cDevice.h"
 #include "cDyn.h"
+#include "cSub.h"
 #define CLASS cModule
 
 extern cDevice* pDevice;
@@ -55,4 +56,37 @@ void CLASS::dump(FILE*f){
 //    fprintf(f," %d. '%s'\n",i,paramnames.getName(i));
 //  }
   psubs->dump(f,"subs:\n");
+}
+/******************************************************************************
+ * Verilog
+ * Output this module as a verilog module.
+*******************************************************************************/ 
+void CLASS::verilog(FILE*fout){
+  // first, check the module's instances and make sure their types are known.
+  if(psubs){
+    int i; for(i=0;i<psubs->size;i++){
+      cSub* sub=psubs->data[i]->valSub;
+      if(!sub->type->converted)
+        sub->type->verilog(fout);
+    }
+  }
+  // Now output the module verilog style
+  fprintf(fout,"module %s(\n",name);
+  // pins
+  pins->vlogPinDefs(fout);
+  fputs(");\n",fout);
+  
+  // output the module's instances
+  if(psubs){
+    int i; for(i=0;i<psubs->size;i++){
+      cSub* sub=psubs->data[i]->valSub;
+      //Create a wire for every pin of this sub, before the sub...
+      sub->pins->vlogWireDefs(fout,sub->name);    
+       //first, the loc
+      //fprintf(fout,"(*RLOC="
+      fprintf(fout,"  %s ",sub->type->name);
+      fprintf(fout," %s(",sub->name);
+    }
+  }
+  fputs("endmodule\n",fout);
 }

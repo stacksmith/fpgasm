@@ -75,27 +75,26 @@ int main(int argc,char** argv){
 //fprintf(stderr,"parse() completed\n");
     cModule* root = parser->topModule;
     //(cModule*)pDevice->findProto((char*)"top",3); 
-//dynamic tree...  First create a fake sub for the root
-    cSub* subroot = new cSub(root->name,strlen(root->name));
-    subroot->type=root;
-    subroot->pparams=0;
-    subroot->pins=root->pins; //these will not be changed, copy by ref
-    cDyn*dynroot=new cDyn(subroot,0);
-    dynroot->fout = fout;
-    dynroot->expand();
-    dynroot->place();
     /* Determine the requested output type */
 //fprintf(stderr,argv[2]);
     switch(otype){
-      case xdl:
-        // now, if the output file is .xdl, output xdl.
+      case xdl: {
+        //dynamic tree...  First create a fake sub for the root
+        cSub* subroot = new cSub(root->name,strlen(root->name));
+        subroot->type=root;
+        subroot->pparams=0;
+        cDyn*dynroot=new cDyn(subroot,0);
+        dynroot->fout = fout;
+        dynroot->expand();
+        dynroot->place();
+       // now, if the output file is .xdl, output xdl.
         dynroot->xdlHeader();
         dynroot->xdlDefs();
         dynroot->xdlWire();
         fprintf(stderr,"Success! %s generated\n",argv[2]);
-        break;
+        }break;
       case verilog:
-        dynroot->verilog();
+        root->verilog(fout);
         break;
     }
   }
