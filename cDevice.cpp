@@ -65,11 +65,10 @@ void CLASS::parse_defs( char*buf){
       cPrim* prim = new cPrim(name,strlen(name));
       prim->paramnames->add("loc",3,cDatum::newInt(0));
       prim->paramnames->add("cfg",3,cDatum::newInt(0)); //TODO: null is OK now
-      prim->paramnames->add("cfgfile",7,NULL);
-      
-
-    // now parse the pins    
-    //\t\t(pin RESET RESET output)
+      prim->paramnames->add("cfgfile",7,NULL); //TODO: awkward 
+      //------------------------------------------------------------------
+      // Primitive's pins are parsed.
+      //\t\t(pin RESET RESET output)
       int i;
       for(i=0;i<pins;i++){
         fgets(buf,1024,f);
