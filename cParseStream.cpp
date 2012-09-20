@@ -42,17 +42,43 @@ void CLASS::setFile(FILE*f){
                                                                                  
 ******************************************************************************/ 
 cDatum* CLASS::parseQuotedString(){
-  char*p=++ptr; //ptr is past "
+  ptr++; //ptr is past "
   int len=0;
   char c;
+  char* buf=(char*)malloc(0x10000);
+  char*dest=buf;
   // Now count the characters until "
-  while('"' != (c=*p++)){
+  while('"' != (c=*ptr++)){
     len++;
-    //TODO: check for macro insertion of parameter names...
+    *dest++=c;
+    switch(c){
+      case 0x0A:
+      case 0x0D: reload(); break;
+    }
   }
-  cDatum* ret = cDatum::newStr(ptr,len);
-  ptr+=len+1;
-//fprintf(stderr,"QUOTED STR [%s],%d\n",ret->valStr,strlen(ret->valStr));
+  *dest++=0;len++;
+  cDatum* ret = cDatum::newStr(buf,len);
+  free(buf);
+  return ret;
+}
+cDatum* CLASS::parseBracedString(){
+  ptr++; //ptr is past {
+  int len=0;
+  char c;
+  char* buf=(char*)malloc(0x10000);
+  char*dest=buf;
+  // Now count the characters until "
+  while('}' != (c=*ptr++)){
+    len++;
+    *dest++=c;
+    switch(c){
+      case 0x0A:
+      case 0x0D: reload(); break;
+    }
+  }
+  *dest++=0;len++;
+  cDatum* ret = cDatum::newStr(buf,len);
+  free(buf);
   return ret;
 }
 

@@ -48,6 +48,7 @@ protected:
   
   //cDatum* parseLocation();
   cDatum* parseQuotedString();
+  cDatum* parseBracedString();
   int     banglen(char*str); //length of !paramname!
   S32 parseLiteral();  //TODO: duplicated in dyn?
   void showtok(); //debugigng

@@ -65,37 +65,42 @@ void CLASS::dump(FILE*f){
 *******************************************************************************/ 
 void CLASS::verilog(FILE*fout){
   // first, check the module's instances and make sure their types are known.
-  if(psubs){
-    int i; for(i=0;i<psubs->size;i++){
-      cSub* sub=psubs->data[i]->valSub;
-      if(!sub->type->converted)
-        sub->type->verilog(fout);
+  int iVlog = paramnames->find("Verilog",7);
+  if(-1==iVlog){
+    if(psubs){
+      int i; for(i=0;i<psubs->size;i++){
+        cSub* sub=psubs->data[i]->valSub;
+        if(!sub->type->converted)
+          sub->type->verilog(fout);
+      }
     }
-  }
-  // Now output the module verilog style
-  fprintf(fout,"module %s(\n",name);
-  // pins
-  pins->vlogPinDefs(fout); //see cCollection.cpp
-  fputs(");\n",fout);
+    // Now output the module verilog style
+    fprintf(fout,"module %s(\n",name);
+    // pins
+    pins->vlogPinDefs(fout); //see cCollection.cpp
+    fputs(");\n",fout);
   
-  // output the module's instances
-  if(psubs){
-    int i; for(i=0;i<psubs->size;i++){
-      cSub* sub=psubs->data[i]->valSub;
-      //Create a wire for every pin of this sub, before the sub...
-      sub->pins->vlogWireDefs(fout,sub->name);    
+    // output the module's instances
+    if(psubs){
+      int i; for(i=0;i<psubs->size;i++){
+        cSub* sub=psubs->data[i]->valSub;
+        //Create a wire for every pin of this sub, before the sub...
+        sub->pins->vlogWireDefs(fout,sub->name);    
        //first, the loc
-      //fprintf(fout,"(*RLOC="
-      fprintf(fout,"  %s ",sub->type->name);
-      fprintf(fout," %s(",sub->name);
-      sub->pins->vlogPins(fout,sub->name); //output the pins in parens
-      fputs(");\n",fout);
+       //fprintf(fout,"(*RLOC="
+        fprintf(fout,"  %s ",sub->type->name);
+        fprintf(fout," %s(",sub->name);
+        sub->pins->vlogPins(fout,sub->name); //output the pins in parens
+        fputs(");\n",fout);
+      }
     }
+    // wire up our module
+    vlogWiring(fout);
+    fputs("\n",fout);
+    fputs("endmodule\n",fout);
+  } else {
+    fputs(paramnames->data[iVlog]->valStr, fout);
   }
-  // wire up our module
-  vlogWiring(fout);
-  fputs("\n",fout);
-  fputs("endmodule\n",fout);
 }
 /******************************************************************************
  At this point we defined the module's instances, and declared all inst inputs

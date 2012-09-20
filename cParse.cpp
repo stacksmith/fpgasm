@@ -88,7 +88,8 @@ bool CLASS::handleInclude(int len){
                                                                    
 ******************************************************************************/ 
 void CLASS::parsePins(cCollection* pins,int dir){
-if(dir>1) fprintf(stderr,"FUCK ME\n");
+//  if(dir>1) 
+//    fprintf(stderr,"WTF\n");
   ws(true);
   int len=requireWord("(",1);
   ws(true);
@@ -139,13 +140,21 @@ void CLASS::parseParamNames(cModule* module){
     ptr+=len;
     ws(true);
     char c = *ptr;
+    cDatum* pdatum;
     switch(c){
       case ':' :
         //Default value provided.
         ptr++;
-        ws(true); len=cnt();
-        module->paramnames->data[index]= cDatum::newStr(ptr,len);
-        ptr+=len;
+        ws(true); 
+        if('{'==*ptr){
+          pdatum = parseBracedString();
+        } else {
+          len=cnt();
+          pdatum=cDatum::newStr(ptr,len);
+          ptr+=len;
+        }
+        module->paramnames->data[index]= pdatum;
+        ws(true);
         // now either , or ).  Set c and fallthrough! WATCH OUT FOR ORDER HERE
         c=*ptr;
         switch(c){
