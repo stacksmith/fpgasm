@@ -18,7 +18,7 @@ REM     along with FPGAsm.  If not, see <http://www.gnu.org/licenses/>.
 REM ******************************************************************************/
  g++ fpgasm.cpp cDatum.cpp cCollection.cpp cProto.cpp cPrim.cpp cDevice.cpp ^
      cModule.cpp cSub.cpp cDyn.cpp cParseStream.cpp cParse.cpp cWires.cpp ^
-     cWireList.cpp ^
+     cWireList.cpp cQuark.cpp ^
      -Wall  -fpack-struct -o fpgasm  
 REM CHANGE THIS LINE to your preferred PATH-visible directory
 copy fpgasm.exe C:\WINDOWS\fpgasm.exe
