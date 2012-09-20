@@ -73,7 +73,7 @@ void CLASS::verilog(FILE*fout){
   // Now output the module verilog style
   fprintf(fout,"module %s(\n",name);
   // pins
-  pins->vlogPinDefs(fout);
+  pins->vlogPinDefs(fout); //see cCollection.cpp
   fputs(");\n",fout);
   
   // output the module's instances
@@ -100,27 +100,22 @@ void CLASS::verilog(FILE*fout){
  and outputs as verilog wires.  Now the module wiring can connect them all!
 ******************************************************************************/
 void CLASS::vlogWiring(FILE*fout){
-  fprintf(fout,"WIRING GOES HERE\n");
   cWireList wl = pwires->seekFirst();
   while(wl.exists()){
     //more wires exist.
     //source
     int sInst; int sIndex;int sBusid;
     wl.getInc(sInst,sIndex,sBusid);
-    fprintf(fout,"from %d %d %d\n",sInst,sIndex,sBusid);
+//fprintf(fout,"from %d %d %d\n",sInst,sIndex,sBusid);
     while(!wl.isLast()){
       int dInst; int dIndex;int dBusid;
       wl.getInc(dInst,dIndex,dBusid);
-fprintf(fout,"to %d %d %d\n",dInst,dIndex,dBusid);
+//fprintf(fout,"to %d %d %d\n",dInst,dIndex,dBusid);
       //Now, verilog-style assigns. Destination cannot be a power net.
       fputs("  assign ",fout);
-      if(0xFF==dInst){
-        //destination is "MY" pin
-        fprintf(fout,"%s_%s=",name,pins->name[dIndex]);
-      }else{
-        fprintf(fout,"%s_%s=",psubs->name[dInst],psubs->data[dInst]->valSub->pins->name[dIndex]);
-      }
-      //now source, RHS
+      cModule* modDest = (0xFF==dInst)?this:(cModule*)psubs->data[dInst]->valSub->type;
+      modDest->vlogAssignDest(fout,dIndex,dBusid);
+      fputs(" = ",fout);
       if(0xFF==sInst){
         //source is "MY" pin.  The pin can also be a power net
         switch(sIndex){
@@ -137,6 +132,18 @@ fprintf(fout,"to %d %d %d\n",dInst,dIndex,dBusid);
     }
     wl.seekNext();  //next wire
   }
-
-  
+}
+/******************************************************************************
+ Verilog output of a pin name for ASSIGNMENTS!
+ 
+******************************************************************************/
+void CLASS::vlogAssignDest(FILE* fout,U32 pindex,U32 busid){
+  fprintf(fout,"%s_%s",name,pins->name[pindex]);
+  //final issue - is it a scalar or a bus?
+  if(pins->data[pindex]->pinBusWidth > 1){
+    //yes,a bus
+    fprintf(fout,"[%d]",busid);
+  }
+}
+void CLASS::vlogAssignSrc(FILE* fout,U32 pindex,U32 busid){
 }

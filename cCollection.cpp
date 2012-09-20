@@ -184,7 +184,7 @@ void CLASS::vlogWireDefs(FILE*f,const char*prefix){
     fputs(" wire ",f);
     U32 buswidth = data[i]->pinBusWidth;
     if(buswidth>1)
-      fprintf(f,"[%d:0] ",buswidth);
+      fprintf(f,"[%d:0] ",buswidth-1);
     fprintf(f,"%s_%s;\n",prefix,name[i]);
   }
 }
@@ -221,7 +221,7 @@ void CLASS::vlogPins(FILE*f,const char*prefix){
     U32 buswidth = data[i]->pinBusWidth;
     fprintf(f,"%s_%s",prefix,name[i]);
     if(buswidth>1)
-      fprintf(f,"[%d:0]",buswidth);
+      fprintf(f,"[%d:0]",buswidth-1);
     if(i!=size-1)
       fputs(",",f);
   }

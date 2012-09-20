@@ -34,5 +34,7 @@ public:
   //cCollection pins;  //from cProto
   virtual void verilog(FILE*f);
   void vlogWiring(FILE*f);
+  void vlogAssignDest(FILE*fout,U32 pindex,U32 busid);
+  void vlogAssignSrc(FILE*fout,U32 pindex,U32 busid);
 // Data
 };
