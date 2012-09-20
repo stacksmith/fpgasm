@@ -26,9 +26,7 @@
 /* Ok, here we go.  To output the definitions to XDL we need to walk the tree
 */
 void CLASS::xdlDefs(){
-
-  if(hero->type->isPrimitive()){
-//hierName(stderr);
+  if(isPrimitive()){
 //fprintf(stderr," xdlDefs %p \n",loc);
 //loc->dump(stderr);
     char* primsite = loc->outputLoc();

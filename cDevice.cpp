@@ -86,7 +86,8 @@ printf("ERROR: pin direction\n");
       }
       // Now commit the pins
       prim->pins->solidify();
-  //------------------------------------------------------------------
+      //------------------------------------------------------------------
+      // Element name pins
     // Elements are interesting only if there is a 'cfg' line...
       for(i=0;i<elements;i++){
         fgets(buf,1024,f); //(element line

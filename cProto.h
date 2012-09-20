@@ -25,7 +25,6 @@ public:
    cProto(char*name,int size);
   ~cProto();
    void dump(FILE*f);
-   bool isPrimitive();
    virtual void verilog(FILE*f)=0;
   // data
   bool converted;    //verilog sucker marks modules already sucked in as used.

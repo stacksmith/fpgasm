@@ -336,6 +336,20 @@ void CLASS::errTopModuleNotConnected(const char* from,const char* pin){
   fprintf(stderr,"Top module's pin %s is not connected\n",pin);
   error(-1);
 }
-
+/******************************************************************************
+  isPrimitive
+  Originally I thought that having no subs makes it a root node, and a primitive.
+  But for verilog output it is useful to put in LUT/MUXCY etc. subs that do
+  not get xdl'd but do get verilog'd.  So how do we know if we are a primitive
+  or not? Simple - if we have a cfg we are a primitive!
+******************************************************************************/
+bool CLASS::isPrimitive(){
+  //
+//  if(psubs) //primitives have psubs=NULL.  modules create a collection.
+//    return false;
+//  return true;
+  int iCfg = pparams->find("cfg",3);
+  return (-1 != iCfg);
+}
 #include "cDynXdl.cpp"
 //#include "cDynVerilog.cpp"

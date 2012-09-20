@@ -68,5 +68,3 @@ void CLASS::dump(FILE*f){
   else
     pparams->dump(f,"params:\n");
 }
-
-

@@ -47,11 +47,3 @@ void CLASS::dump(FILE*f){
   paramnames->dump(f,"paramnames:\n");
  
 }
-/******************************************************************************
-  
-******************************************************************************/
-bool CLASS::isPrimitive(){
-  if(psubs) //primitives have psubs=NULL.  modules create a collection.
-    return false;
-  return true;
-}
