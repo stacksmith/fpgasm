@@ -338,4 +338,4 @@ void CLASS::errTopModuleNotConnected(const char* from,const char* pin){
 }
 
 #include "cDynXdl.cpp"
-#include "cDynVerilog.cpp"
+//#include "cDynVerilog.cpp"
