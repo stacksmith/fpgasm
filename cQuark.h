@@ -21,6 +21,8 @@
  constructs that may be instantiated in Verilog, and is used in conversion to
  verilog.  Modules using quarks instead of instantiating primitives can be
  converted to verilog.
+ A quark is instantiated inside a module, and merges its own cfg data and pins
+ with those of the module.
 ******************************************************************************/
 #pragma once
 #include "cProto.h"

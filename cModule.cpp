@@ -39,6 +39,8 @@ CLASS::~CLASS(){
 
 cSub* CLASS::getSub(char*name){
   int i = psubs->find(name);
+  if(-1==i)
+    return NULL;
   cDatum* r = psubs->getDatum(i);
   if(TYPE_SUB!=r->type)
     return r->valSub;

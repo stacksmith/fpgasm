@@ -85,13 +85,13 @@ this->dump(stderr,"DUMPING");
   Occasionally we need an item that is just a reference to an existing
   name:value pair.  Clone does just that.  
 ******************************************************************************/ 
+//TODO: rename to addRef
 int CLASS::addClone(const char* str,cDatum* dat){
   name[size]=(char*)str;
   data[size]=dat;
   return size++;
  
 }
-
 void CLASS::solidify(){
   //replace builder with properly sized copy of the array
   name= (char**)realloc(name,size*sizeof(char*));

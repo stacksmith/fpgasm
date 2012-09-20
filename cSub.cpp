@@ -39,7 +39,7 @@ CLASS::~CLASS(){
 ******************************************************************************/ 
 void CLASS::init(cProto* theType){
   type=theType;
-  //Now initialize our pins to be proto's
+  //Now initialize our pins to be proto's TODO: really?
   pins=type->pins;
 }
 /******************************************************************************

@@ -20,6 +20,7 @@
 #include "cParse.h"
 #include <ctype.h>
 #include "cModule.h"
+#include "cQuark.h"
 #include "cSub.h"
 #define CLASS cParse
 #include "cDevice.h"
@@ -610,6 +611,50 @@ fprintf(stderr,"merging inst %s\n",inst->name);
   pins->solidify();
   inst->pins=pins;
 }
+
+/******************************************************************************
+     parsemergeQuark - merge the quark with the module itself!
+                                                                                
+******************************************************************************/ 
+void CLASS::parseMergeQuark(cModule*module){
+  ws(true);
+  int size=cnt();
+  //find the quark name
+  cProto* proto = pDevice->findProto(ptr,size); //find prototype by name
+  if(!proto){
+    errorIn(__func__);
+    fprintf(stderr,"Quark %.*s has not been defined\n",size,ptr);
+    error(1);
+  }
+  ptr+=size;
+  //TODO:merge parameter names, without duplication...
+  //merge pins TODO: if dup, check direction and keep old one.
+  int i; for(i=0;i<proto->pins->size;i++){
+    module->pins->addClone(proto->pins->name[i],proto->pins->data[i]);
+  }
+  //merge instances TODO: must be a dup! just add params
+  for(i=0;i<proto->psubs->size;i++){
+    cSub* oldsub = module->getSub(proto->psubs->name[i]);
+    if(!oldsub){
+      //reference the merging sub TODO: is this really OK?
+      module->psubs->add(proto->psubs->name[i],
+                         strlen(proto->psubs->name[i]),
+                         proto->psubs->data[i]);
+    } else {
+      //it exists, so merge parameters
+      int j;
+      cSub* srcSub = proto->psubs->data[i]->valSub; 
+      for(j=0;j<srcSub->pparams->size;j++){
+        //TODO: check parameters for duplication - not allowed.
+        oldsub->pparams->add(srcSub->pparams->name[j],
+                             strlen(srcSub->pparams->name[j]),
+                             srcSub->pparams->data[j]);
+      }
+    }
+  }
+  
+fprintf(stderr,"merging quark type %s\n",proto->name);
+}
 /******************************************************************************
      parseModule
                                                                                 
@@ -628,6 +673,7 @@ cModule* CLASS::parseModule(){
   }
   cModule* module = new cModule(ptr,size); //it will check for dups
   ptr+=size;
+  //---------------------factor---
   // parameter names
   parseParamNames(module); 
   //Now inputs and outputs
@@ -647,9 +693,10 @@ cModule* CLASS::parseModule(){
     }
     ws(true );size=cnt();
   }
-  //----------------------------------------------------------------
   // now parse insts and wiring...
   module->pwires=new cWires(module); //there may be many wires...
+  //---------------------factor---
+  //----------------------------------------------------------------
   
   int idxInst=-1; //keep track of most recent instance index for 'his'
   cSub* pinst=0;
@@ -661,8 +708,14 @@ cModule* CLASS::parseModule(){
     } else if(tokAnything("merge",size)){
       parseMerge(module,pinst);
     } else {
-     pinst=parseSub(module,size);
-      idxInst++;
+       if(tokAnything("quark",size)){
+        //merge quark into the module definition!
+        parseMergeQuark(module); 
+        
+      } else {
+        pinst=parseSub(module,size);
+        idxInst++;
+      }
     }
     ws(true );size=cnt();
     
@@ -688,7 +741,37 @@ cModule* CLASS::parseModule(){
                                                                                 
 ******************************************************************************/ 
 bool CLASS::parseQuark(){
-  fprintf(stderr,"parseQuark not yet implemented\n");
+  ws(true);
+  int size=cnt();
+  cParseStream::validateName(size);
+  //TODO: check for duplicates
+  cQuark* quark = new cQuark(ptr,size);
+  ptr+=size;
+  //---------------------factor---
+ 
+  //Now inputs and outputs
+  ws(true); size=cnt();
+  while(!tokAnything("{",size)){
+    if(tokAnything("input",size)){
+      optionalColon();
+      parsePins(quark->pins,0); //inputs
+    }else if(tokAnything("output",size)){
+      optionalColon();
+      parsePins(quark->pins,1); //outputs
+    }
+    else {
+      errorIn("parseQuark()");
+      fprintf(stderr,"Quark header must contain only input:() output:() or ;\n");
+      error(1);
+    }
+    ws(true );size=cnt();
+  }
+  //Let's use paramnames as actual merge parameters here...
+ // pparamnames = new cCollection();
+  //---------------------factor---
+  quark->pins->solidify();
+  // psubs are not used and are nil.
+  // wires are not used and are nil.
   return 1;
 }
 /******************************************************************************
@@ -709,9 +792,9 @@ void CLASS::parseModules(){
     if(handleInclude(len))  continue;
     if(pDevice){
       /* If device is parsed, a quark or module is expected. */
-      if(tokAnything("quark",5))
-        iterate = parseQuark();
-      else
+ //     if(tokAnything("quark",5))
+ //       iterate = parseQuark();
+ //     else
         iterate=parseModule();
     } else {
       errorIn("parseModules()");

@@ -37,7 +37,7 @@ public:
 //data
    cModule* topModule; //keep track of the last module - it is top.
  
-private:
+protected:
   void parseModules();
   bool handleInclude(int len);
   void validateName(int len,cModule* module);
@@ -49,6 +49,7 @@ private:
   cDatum* parseParamData(cModule*module,const char* prepend);
   sWireEndpoint parseWireEndpoint(cModule* module,int idxInst,cSub*pinst);
   void parseWire(cModule* module,int idxInst,cSub*pinst);
+  void  parseMergeQuark(cModule* module);
   
   cSub* parseSub(cModule* module,int len);
   void  parseMerge(cModule* module,cSub* pinst);
