@@ -684,7 +684,16 @@ cModule* CLASS::parseModule(){
   return module;
 }
 /******************************************************************************
+     parseQuark
+                                                                                
+******************************************************************************/ 
+bool CLASS::parseQuark(){
+  fprintf(stderr,"parseQuark not yet implemented\n");
+  return 1;
+}
+/******************************************************************************
  In between modules, #includes may occur.
+ Sept 19 - added quarks
                                                                                 
 ******************************************************************************/ 
 void CLASS::parseModules(){
@@ -699,8 +708,11 @@ void CLASS::parseModules(){
     /* In between modules, #INCLUDE is allowed */
     if(handleInclude(len))  continue;
     if(pDevice){
-      /* If device is parsed, a module is expected. */
-      iterate=parseModule();
+      /* If device is parsed, a quark or module is expected. */
+      if(tokAnything("quark",5))
+        iterate = parseQuark();
+      else
+        iterate=parseModule();
     } else {
       errorIn("parseModules()");
       fprintf(stderr,"expecting an include of an .xdlrc file\n");

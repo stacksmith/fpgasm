@@ -54,5 +54,6 @@ private:
   void  parseMerge(cModule* module,cSub* pinst);
   void parsePairs(cModule* module,cSub* sub);
   cModule* parseModule();
+  bool parseQuark();
 //data  
 };
