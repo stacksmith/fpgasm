@@ -12,4 +12,5 @@ loc:SLICE_X0Y0<CR> other stuff fails.  CR is a menace here.
 
 Syntax changes
 --------------
-Accomodate initalization file for RAMs
+Quark experiment not worth it.  To be deprecated.
+DONE Accomodate initalization file for RAMs
