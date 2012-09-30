@@ -1,15 +1,7 @@
-<<<<<<< HEAD
 See [the wiki](https://github.com/stacksmith/fpgasm/wiki) for more information.
 
 See other repos for tools and code
 * [fpgasm-test](https://github.com/stacksmith/fpgasm-test)  test code
 * [fpgasm-xcfg](https://github.com/stacksmith/fpgasm-xcfg)  visual configuration string tool
-=======
-See the wiki for more information.
-
-See other repos for tools and code
-* fpgasm-test  test code
-* fpgasm-xcfg  visual configuration string tool
->>>>>>> 351a4e3ac29a6792c5c569ea06910562c1a7d887
 
 
