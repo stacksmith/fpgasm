@@ -323,7 +323,7 @@ void CLASS::validateName(int len){
             c);
     error(1);
   }
-  int i;
+/*  int i;
   for(i=1;i<len;i++){
     c=*p++;
     if('_'==c) continue;
@@ -335,6 +335,7 @@ void CLASS::validateName(int len){
      error(1);
     }
   }
+  */
   if((4==len)&&(0==strncmp(ptr,"wire",4))){
       errorIn("validateName()");
       fprintf(stderr,"Identifier must not be a reserved word. Check for last ;  \n");

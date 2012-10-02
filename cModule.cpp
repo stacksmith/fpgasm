@@ -29,7 +29,7 @@ CLASS::CLASS(char* name,int size)
 : cProto(name,size)
 {
 //printf("MODULE %s %d\n",name,size);
-  psubs=new cCollection();
+  psubs=new cCollection(4096);  //TODO: make collection expand
   pDevice->addProto(name,size,this); //will check for dups
 }
 CLASS::~CLASS(){

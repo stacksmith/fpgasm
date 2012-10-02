@@ -187,7 +187,7 @@ sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
   sWireEndpoint ep;
   ep.busid1=ep.busid2=0; //for simple scalar wires.
 //  cProto *proto;
-  ws(true); int len=cnt();
+  ws(true); int len=cnt(" '");
   cProto* pinowner; //for error reporting mainly...
   if(tokAnything("my",len)){
     ep.inst=0xFF;
@@ -709,7 +709,7 @@ cModule* CLASS::parseModule(){
   
   int idxInst=-1; //keep track of most recent instance index for 'his'
   cSub* pinst=0;
-  ws(true);size=cnt();
+  ws(true);size=cnt(" "); //10.02.2012 - names can be anything, require space
   while(!tokAnything("}",size)){
    if(tokAnything("wire",size)){
     //if(tokWire(size)){
@@ -726,7 +726,7 @@ cModule* CLASS::parseModule(){
         idxInst++;
       }
     }
-    ws(true );size=cnt();
+    ws(true );size=cnt(" ");
     
   }
   module->pins->solidify();
