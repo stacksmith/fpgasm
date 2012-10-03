@@ -52,7 +52,7 @@ protected:
   int     banglen(char*str); //length of !paramname!
   S32 parseLiteral();  //TODO: duplicated in dyn?
   void showtok(); //debugigng
-  void validateName(int len);
+  void validateName(const char*func,int len);
 
   void errorIn(const char* from);
   void warningIn(const char* from);

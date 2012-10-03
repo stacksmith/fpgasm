@@ -23,10 +23,10 @@
 #define CLASS cWires
 
 
- U8* CLASS::ptr;
 CLASS::CLASS(cModule*mod){
-  buf=(U8*)malloc(4096); //room .
-  ptr=buf;              //valid until solidify
+  index=0;                 
+  max = CWIRES_CAP_INIT;   //starting point
+  buf=(U8*)malloc(max);  //room .
 #ifdef DEBUG
   bugModule=mod;
 #endif
@@ -38,26 +38,29 @@ CLASS::~CLASS(){
 }
 
 void CLASS::solidify(){
-  *ptr++=0xFE;
-  long int size=(ptr-buf);
-  if(1==size){
-    size+=1;
-    *ptr=0xFE;
-  }
+  buf[index++]=0xFE;
+  buf[index++]=0xFE;
 //  printf("SOLIDIFYING to %ld bytes\n",size);
-  buf=(U8*)realloc(buf,(ptr-buf));
+  buf=(U8*)realloc(buf,(index));
   
 }
 
 void CLASS::add(int inst,int port,int busid){
-  *ptr++=inst;
-  *ptr++=port;
-  *ptr++=busid;
+  //is there room for 3 more?
+  if((index+3)>=max){
+    // reallocate, double size
+fprintf(stderr,"cWires: reallocating from %d to %d\n",max,max*2);
+    max = max*2;
+    buf = (U8*)realloc(buf,max);
+  }
+  buf[index++]=inst;
+  buf[index++]=port;
+  buf[index++]=busid;
 }
 
 
 void CLASS::close(){
-  *ptr++=0xFE;
+  buf[index++]  =0xFE;
 }
   
 /*------------------------------------------------------------------

@@ -67,7 +67,8 @@ int main(int argc,char** argv){
     fprintf(stderr,"Error. Output file must have a .v or .xdl suffix\n");
     exit(1);
   }  
-  
+// DEBUGGING _ REMOVE ME!
+//fout=stdout;  
   pDevice = NULL;
   cParse* parser = new cParse();
   try {

@@ -175,6 +175,8 @@ void CLASS::parseParamNames(cModule* module){
   }
   module->paramnames->solidify();
 }
+int i=0;
+bool BUGGER ;//DEBUGGING-REMOVE ME
 /******************************************************************************
       parseWireEndpoint
       
@@ -182,12 +184,15 @@ Parse a unit of wire declaration.
                                                                                
 ******************************************************************************/ 
 sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
-//fprintf(stderr,"STARTING [%s]\n",ptr);
   cCollection*ppins;
   sWireEndpoint ep;
   ep.busid1=ep.busid2=0; //for simple scalar wires.
 //  cProto *proto;
   ws(true); int len=cnt(" '");
+if(BUGGER)
+  fprintf(stderr,"STARTING %d[%.*s]\n",i++,len,ptr);
+if(i>590)
+  fprintf(stderr,"endpoint %d[%.*s]\n",i++,len,ptr);
   cProto* pinowner; //for error reporting mainly...
   if(tokAnything("my",len)){
     ep.inst=0xFF;
@@ -201,8 +206,17 @@ sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
     } else {
       /* find the inst by name
       */
-      cParseStream::validateName(len); //WTF - it did not see it?f
+//if(i>=580)
+//  fprintf(stderr,"A\n");
+      cParseStream::validateName(__func__,len); //WTF - it did not see it?f
+//if(i>=580){
+//  fprintf(stderr,"trying to find %.*s %d\n",len,ptr,len);
+//  fprintf(stderr,"modules->psubs is %p\n",module->psubs);
+//  module->psubs->dump(stderr,"collection");
+//}
       int inst =module->psubs->find(ptr,len);
+//if(i>=580)
+//  fprintf(stderr,"C\n");
 
 //fprintf(stderr,"FOUND inst %s at %d [%s]\n",module->psubs->name[ep.inst],ep.inst,ptr);
       if(-1==inst){
@@ -214,6 +228,8 @@ sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
       ep.inst=inst;
       ppins =module->psubs->data[ep.inst]->valSub->pins;
       ptr+=len;
+//if(i>580)
+//  fprintf(stderr,"D\n");
     }
       pinowner = module->psubs->data[ep.inst]->valSub->type;
   }
@@ -289,13 +305,16 @@ sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
 ******************************************************************************/ 
 
 void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst){
+//fprintf(stderr,"wire ");
   // start by parsing the source.  It may refer to a bus, in which case we shall
   // loop for every wire in the bus...
   // For starters, create a fixed array of 16 endpoints.
-  #define MAX_ENDPOINTS 16
+  #define MAX_ENDPOINTS 256
   sWireEndpoint ep[MAX_ENDPOINTS];
   //parse all the endpoints. ep[0] is the source endpoint.
+BUGGER=true;
   ep[0]=parseWireEndpoint(module,idxInst,pinst);
+BUGGER=false;
   int srcBusWidth= ep[0].busid2 - ep[0].busid1; //width-1; 0 means scalar... 
 //fprintf(stderr,"module '%s'; width %d\n",module->name,buswidth);
   int i=1; //index of endpoint being processed
@@ -319,7 +338,7 @@ void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst){
     i++;
     if(i>(MAX_ENDPOINTS-1)){
       errorIn("parseWire");
-      fprintf(stderr,"Wire chain too long; maximum 16 exceeded\n");
+      fprintf(stderr,"Wire chain too long; maximum %d exceeded\n",MAX_ENDPOINTS);
       error(1);
     }
     ws(true); len=cnt();
@@ -514,7 +533,8 @@ void CLASS::parsePairs(cModule* module,cSub* sub){
 ******************************************************************************/ 
 cSub* CLASS::parseSub(cModule* module,int len){
   // NAME
-  validateName(len,module);
+//fprintf(stderr,"sub %.*s %d\n",len,ptr,len);
+  validateName(__func__,len,module);
   cSub* sub = new cSub(ptr,len);  
   module->psubs->add(ptr,len,cDatum::newSub(sub));    //add to the collection...
   ptr+=len;  
@@ -673,7 +693,7 @@ cModule* CLASS::parseModule(){
 //  if(!ws(/*required*/false)) return 0; //done!
   ws(true);
   int size=cnt();
-  cParseStream::validateName(size);
+  cParseStream::validateName(__func__,size);
   //first check for duplications
   if(-1 != pDevice->idxFindProto(ptr,size)){
     errorIn(funcname);
@@ -752,7 +772,7 @@ cModule* CLASS::parseModule(){
 bool CLASS::parseQuark(){
   ws(true);
   int size=cnt();
-  cParseStream::validateName(size);
+  cParseStream::validateName(__func__,size);
   //TODO: check for duplicates
   cQuark* quark = new cQuark(ptr,size);
   ptr+=size;
@@ -828,8 +848,8 @@ void CLASS::parse(FILE*f){
   }
 }
 
-void CLASS::validateName(int len,cModule* module){
-  cParseStream::validateName(len);
+void CLASS::validateName(const char* func,int len,cModule* module){
+  cParseStream::validateName(func,len);
   //if another sub exists with this name, error...
    int i = module->psubs->find(ptr,len);
    if(-1 != i) {

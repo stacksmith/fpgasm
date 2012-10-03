@@ -313,14 +313,14 @@ bool CLASS::tokAnything(const char* str,int len){
  validateName
                                                                                 
 ******************************************************************************/ 
-void CLASS::validateName(int len){
+void CLASS::validateName(const char* func,int len){
   // first character must be alpha!
   char*p=ptr;
   char c=*p++;
   if(!isalpha(c)) {
-    errorIn("validateName()");
-    fprintf(stderr,"Identifier must begin with an alpha character, not %c\n",
-            c);
+    errorIn("cParseStream::validateName()");
+    fprintf(stderr,"%s Identifier must begin with an alpha character, not %c\n",
+            func,c);
     error(1);
   }
 /*  int i;

@@ -40,7 +40,7 @@ public:
 protected:
   void parseModules();
   bool handleInclude(int len);
-  void validateName(int len,cModule* module);
+  void validateName(const char* func,int len,cModule* module);
  
   
   

@@ -21,10 +21,12 @@
 /******************************************************************************
  cWires
  
- encapsulates wire encoding.
+ A datastructure containing a list of wires...
+ 3 bytes encode an endpoint... see WireList
  ******************************************************************************/
 class cModule;
 
+#define CWIRES_CAP_INIT 4096 
 class cWires {
 public:
   cWires(cModule* mod);
@@ -37,8 +39,9 @@ public:
 //  void seekInst(cWireList start,int inst); //inst is an index
 //-----------------------------------
 private:    
-  U8* buf;
-  static U8* ptr;
+  U8* buf;            //malloc'd buffer containing data
+  U32 index;          //pointer used during construction
+  U32 max;
 #ifdef DEBUG
 public:
   cModule* bugModule;
