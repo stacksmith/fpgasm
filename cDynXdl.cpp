@@ -156,6 +156,7 @@ void CLASS::xdlWireUpOrDown(int refindex,int busId){
       dad->xdlContinueWire(this,refindex,busId);
     // else top module not connected...
     else
+      //we are top...
       errTopModuleNotConnected(__func__,hero->pins->name[refindex]);
   }
 }

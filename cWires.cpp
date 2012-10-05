@@ -25,7 +25,7 @@
 
 CLASS::CLASS(cModule*mod){
   index=0;                 
-  max = CWIRES_CAP_INIT;   //starting point
+  max = 16384;// CWIRES_CAP_INIT;   //starting point
   buf=(U8*)malloc(max);  //room .
 #ifdef DEBUG
   bugModule=mod;
@@ -38,10 +38,11 @@ CLASS::~CLASS(){
 }
 
 void CLASS::solidify(){
-  buf[index++]=0xFE;
-  buf[index++]=0xFE;
+  add(0xFE,0xFE,0xFE);
 //  printf("SOLIDIFYING to %ld bytes\n",size);
   buf=(U8*)realloc(buf,(index));
+  max=index;
+fprintf(stderr,"cWires: final wire space is %d bytes, %d wires\n",index,index/3);
   
 }
 

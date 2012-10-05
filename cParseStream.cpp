@@ -304,7 +304,7 @@ bool CLASS::tokAnything(const char* str,int len){
   int sl = strlen(str);
   if((len==sl)&&(0==strncasecmp(ptr,str,sl))){
     ptr+=sl;
-    ws(false);
+    ws(false); //EOF here is not an error.
     return true;
   }
   return false;

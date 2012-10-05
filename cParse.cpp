@@ -189,10 +189,10 @@ sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
   ep.busid1=ep.busid2=0; //for simple scalar wires.
 //  cProto *proto;
   ws(true); int len=cnt(" '");
-if(BUGGER)
-  fprintf(stderr,"STARTING %d[%.*s]\n",i++,len,ptr);
-if(i>590)
-  fprintf(stderr,"endpoint %d[%.*s]\n",i++,len,ptr);
+//if(BUGGER)
+//  fprintf(stderr,"STARTING %d[%.*s]\n",i++,len,ptr);
+//if(i>590)
+//  fprintf(stderr,"endpoint %d[%.*s]\n",i++,len,ptr);
   cProto* pinowner; //for error reporting mainly...
   if(tokAnything("my",len)){
     ep.inst=0xFF;
@@ -309,12 +309,12 @@ void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst){
   // start by parsing the source.  It may refer to a bus, in which case we shall
   // loop for every wire in the bus...
   // For starters, create a fixed array of 16 endpoints.
-  #define MAX_ENDPOINTS 256
+  #define MAX_ENDPOINTS 4096
   sWireEndpoint ep[MAX_ENDPOINTS];
   //parse all the endpoints. ep[0] is the source endpoint.
-BUGGER=true;
+//BUGGER=true;
   ep[0]=parseWireEndpoint(module,idxInst,pinst);
-BUGGER=false;
+//BUGGER=false;
   int srcBusWidth= ep[0].busid2 - ep[0].busid1; //width-1; 0 means scalar... 
 //fprintf(stderr,"module '%s'; width %d\n",module->name,buswidth);
   int i=1; //index of endpoint being processed
@@ -729,7 +729,7 @@ cModule* CLASS::parseModule(){
   
   int idxInst=-1; //keep track of most recent instance index for 'his'
   cSub* pinst=0;
-  ws(true);size=cnt(" "); //10.02.2012 - names can be anything, require space
+  ws(true);size=cnt(" \n\r\t"); //10.02.2012 - names can be anything, require space
   while(!tokAnything("}",size)){
    if(tokAnything("wire",size)){
     //if(tokWire(size)){
@@ -746,7 +746,7 @@ cModule* CLASS::parseModule(){
         idxInst++;
       }
     }
-    ws(true );size=cnt(" ");
+    ws(true );size=cnt(" \n\r\t");
     
   }
   module->pins->solidify();
