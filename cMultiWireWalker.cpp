@@ -37,7 +37,7 @@ void CLASS::getInc(int& inst,int& pindex,int& busid){
   index++;
 }
 sWireEnd& CLASS::getInc(){
-  return buf[index];
+  return buf[index++];
 }
 bool CLASS::isStop(void){
   return(INST_STOP==buf[index].inst);

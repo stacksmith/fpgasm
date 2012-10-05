@@ -53,10 +53,14 @@ void CLASS::dump(FILE*f){
   cMultiWireWalker* walker = new cMultiWireWalker(*this);
   while(!walker->isEnd()){
     while(!walker->isStop()){
+fprintf(f," %p ",this);
       walker->getInc().dump(f);
     }
+fprintf(f," %p ",this);
     walker->getInc().dump(f); //dump the stop
   }
+fprintf(f," %p ",this);
   walker->getInc().dump(f); //dump the end, parse too far but who cares...
+fprintf(f,"DONE\n");
   
 }

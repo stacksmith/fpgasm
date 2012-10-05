@@ -18,7 +18,7 @@
 ******************************************************************************/
 #pragma once
 #include "cMultiWire.h"
-#define CMULTIWIRE_CAP_INIT 4096 
+#define CMULTIWIRE_CAP_INIT 16 
 class cMultiWireBuilder : public cMultiWire  {
 public:
   cMultiWireBuilder();

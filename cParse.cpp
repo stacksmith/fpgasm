@@ -26,6 +26,8 @@
 #include "cDevice.h"
 extern cDevice* pDevice;
 #include "cWires.h"
+
+#include "cMultiWireBuilder.h"
 CLASS::CLASS(){
   topModule = NULL;
 }
@@ -304,11 +306,9 @@ sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
                                                                                
 ******************************************************************************/ 
 
-void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst){
+void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst,cMultiWireBuilder* xwire){
 //fprintf(stderr,"wire ");
-  // start by parsing the source.  It may refer to a bus, in which case we shall
-  // loop for every wire in the bus...
-  // For starters, create a fixed array of 16 endpoints.
+  // First collect endpoints, which may be buses.
   #define MAX_ENDPOINTS 4096
   sWireEndpoint ep[MAX_ENDPOINTS];
   //parse all the endpoints. ep[0] is the source endpoint.
@@ -358,21 +358,30 @@ void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst){
           ep[k].inst,
           ep[k].pindex,
           ep[k].busid1+j);
+xwire->add( 
+  ep[k].inst,
+  ep[k].pindex,
+  ep[k].busid1+j);
+        
       }
       module->pwires->close(); //and end the wire
+xwire->stop();
     }
   } else{ //source is a scalar; connect it to all destinations
     //source wire is a scalar...
    module->pwires->add( ep[0].inst,ep[0].pindex,ep[0].busid1);
+xwire->add( ep[0].inst,ep[0].pindex,ep[0].busid1);
     int ei; //endpoint index
     for(ei=1;ei<i;ei++){ //for every endpoint (after source endpoint)
       int j;
      for(j=ep[ei].busid1; j<=ep[ei].busid2; j++){ //for every bus wire
 //  fprintf(stderr,"scalar wire in module '%s'; wiring to [%d]\n",module->name,j);
        module->pwires->add(ep[ei].inst, ep[ei].pindex,j);
+xwire->add(ep[ei].inst, ep[ei].pindex,j);
       }
     }
     module->pwires->close(); //one wire from source, closed.
+xwire->stop();
   }
 }
 
@@ -724,6 +733,7 @@ cModule* CLASS::parseModule(){
   }
   // now parse insts and wiring...
   module->pwires=new cWires(module); //there may be many wires...
+cMultiWireBuilder* xwire = new cMultiWireBuilder(); //***
   //---------------------factor---
   //----------------------------------------------------------------
   
@@ -733,7 +743,7 @@ cModule* CLASS::parseModule(){
   while(!tokAnything("}",size)){
    if(tokAnything("wire",size)){
     //if(tokWire(size)){
-      parseWire(module,idxInst,pinst);
+      parseWire(module,idxInst,pinst,xwire);
     } else if(tokAnything("merge",size)){
       parseMerge(module,pinst);
     } else {
@@ -757,6 +767,8 @@ cModule* CLASS::parseModule(){
 //printf("ptr[%s]\n",ptr);
   module->psubs->solidify();
   module->pwires->solidify();
+xwire->solidify();
+xwire->dump(stderr);
 //q(module->pwires->buf);
 //  module->pwires->dump(stderr);
 

@@ -19,6 +19,7 @@
 #pragma once
 #include "cParseStream.h"
 class cModule;
+class cMultiWireBuilder;
 class cSub;
 /* While parsing wiring, we generate endpoints.  */
 struct sWireEndpoint {
@@ -48,7 +49,7 @@ protected:
   void parseParamNames(cModule* module);
   cDatum* parseParamData(cModule*module,const char* prepend);
   sWireEndpoint parseWireEndpoint(cModule* module,int idxInst,cSub*pinst);
-  void parseWire(cModule* module,int idxInst,cSub*pinst);
+  void parseWire(cModule* module,int idxInst,cSub*pinst,cMultiWireBuilder* xwire);
   void  parseMergeQuark(cModule* module);
   
   cSub* parseSub(cModule* module,int len);
