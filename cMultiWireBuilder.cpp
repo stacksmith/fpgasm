@@ -33,7 +33,7 @@ void CLASS::add(int inst,int port,int busid){
   //is there room 
   if(index>=max) {
     // reallocate, double size
-fprintf(stderr,"cMultiWireBuilder: reallocating from %d to %d\n",max,max*2);
+//fprintf(stderr,"cMultiWireBuilder: reallocating from %d to %d\n",max,max*2);
     max = max*2;
     buf = (sWireEnd*)realloc(buf,max*sizeof(sWireEnd));
   }
@@ -41,7 +41,7 @@ fprintf(stderr,"cMultiWireBuilder: reallocating from %d to %d\n",max,max*2);
   buf[index].pindex=port;
   buf[index].busid=busid;
   index++;
-fprintf(stderr,"cMultiWireBuilder: added %d %d %d, total %d\n",inst,port,busid,index);
+//fprintf(stderr,"cMultiWireBuilder: added %d %d %d, total %d\n",inst,port,busid,index);
 }
 void CLASS::stop(){
   buf[index].inst=INST_STOP;
@@ -54,7 +54,7 @@ void CLASS::end(){
 cMultiWire* CLASS::solidify(){
   end();
   buf = (sWireEnd*)realloc(buf,index*sizeof(sWireEnd)); 
-fprintf(stderr,"cMultiWireBuilder: final size %d units\n",index);
+//fprintf(stderr,"cMultiWireBuilder: final size %d units\n",index);
   cMultiWire* ret = new cMultiWire(*this);
   buf=0; //this way it will not be free'd
   return ret;
