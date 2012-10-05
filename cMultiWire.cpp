@@ -37,7 +37,7 @@ void sWireEnd::dump(FILE*f){
 
 #define CLASS cMultiWire  
 CLASS::CLASS(const cMultiWire& orig){
-  buf=orig.buf;
+  buf=((cMultiWire&)orig).getBuf();
 }
 
 CLASS::CLASS(){

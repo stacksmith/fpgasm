@@ -767,8 +767,10 @@ cMultiWireBuilder* xwire = new cMultiWireBuilder(); //***
 //printf("ptr[%s]\n",ptr);
   module->psubs->solidify();
   module->pwires->solidify();
-xwire->solidify();
-xwire->dump(stderr);
+module->xwire = xwire->solidify();
+delete xwire; 
+
+
 //q(module->pwires->buf);
 //  module->pwires->dump(stderr);
 

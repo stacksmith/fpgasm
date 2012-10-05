@@ -51,10 +51,13 @@ void CLASS::end(){
   buf[index].inst=INST_END;
   index++;
 }
-void CLASS::solidify(){
+cMultiWire* CLASS::solidify(){
   end();
   buf = (sWireEnd*)realloc(buf,index*sizeof(sWireEnd)); 
 fprintf(stderr,"cMultiWireBuilder: final size %d units\n",index);
+  cMultiWire* ret = new cMultiWire(*this);
+  buf=0; //this way it will not be free'd
+  return ret;
 }
 
 

@@ -24,7 +24,7 @@ public:
   cMultiWireBuilder();
   ~cMultiWireBuilder();
   void add(int inst,int port,int busid);
-  void solidify();
+  cMultiWire* solidify();
   void stop();
   void end();
 private:
