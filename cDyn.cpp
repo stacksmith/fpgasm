@@ -210,6 +210,7 @@ void CLASS::place(){
   if(!hloc) {
   /* No location specified in the hero.  This means use dad's loc,
   unless we are top.  In this case, just set 0,0. */
+//fprintf(stderr,"No loc specified\n");
     if(dad)   
       loc = dad->loc; 
     else
@@ -237,6 +238,9 @@ void CLASS::place(){
           case TYPE_LOCXY: //dad is xy, so adjust...
             loc->valX += dad->loc->valX;
             loc->valY += dad->loc->valY;
+//fprintf(stderr,"61. dad's location is xy(%d,%d).  offsetting to (%d,%d)\n",
+//  dad->loc->valX,dad->loc->valY,
+//  loc->valX,loc->valY);
             break;
           default:
             errorIn("place()");

@@ -216,6 +216,7 @@ void CLASS::xdlWirePower1(){
 /*=====================================================================
 ======================================================================*/
 /*=====================================================================
+ * TODO: does not seem to use the parameters passed to it... check.
 ======================================================================*/
 void CLASS::xdlWireInner1(int pinst,int pindex,int busid,cMultiWireWalker& walker){
 //fprintf(stderr,"%s\n",__func__);
