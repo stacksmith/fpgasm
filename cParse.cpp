@@ -354,33 +354,34 @@ void CLASS::parseWire(cModule* module,int idxInst,cSub* pinst,cMultiWireBuilder*
     for(j=0;j<srcBusWidth+1;j++){ //for every wire in the bus
       int k;
       for(k=0;k<i;k++) {    //connect every endpoint
-        module->pwires->add(
-          ep[k].inst,
-          ep[k].pindex,
-          ep[k].busid1+j);
+//DEPRECATED
+//        module->pwires->add(
+//          ep[k].inst,
+//          ep[k].pindex,
+//          ep[k].busid1+j);
 xwire->add( 
   ep[k].inst,
   ep[k].pindex,
   ep[k].busid1+j);
         
       }
-      module->pwires->close(); //and end the wire
+//      module->pwires->close(); //and end the wire
 xwire->stop();
     }
   } else{ //source is a scalar; connect it to all destinations
     //source wire is a scalar...
-   module->pwires->add( ep[0].inst,ep[0].pindex,ep[0].busid1);
+//   module->pwires->add( ep[0].inst,ep[0].pindex,ep[0].busid1);
 xwire->add( ep[0].inst,ep[0].pindex,ep[0].busid1);
     int ei; //endpoint index
     for(ei=1;ei<i;ei++){ //for every endpoint (after source endpoint)
       int j;
      for(j=ep[ei].busid1; j<=ep[ei].busid2; j++){ //for every bus wire
 //  fprintf(stderr,"scalar wire in module '%s'; wiring to [%d]\n",module->name,j);
-       module->pwires->add(ep[ei].inst, ep[ei].pindex,j);
+//       module->pwires->add(ep[ei].inst, ep[ei].pindex,j);
 xwire->add(ep[ei].inst, ep[ei].pindex,j);
       }
     }
-    module->pwires->close(); //one wire from source, closed.
+//    module->pwires->close(); //one wire from source, closed.
 xwire->stop();
   }
 }
@@ -732,7 +733,6 @@ cModule* CLASS::parseModule(){
     ws(true );size=cnt();
   }
   // now parse insts and wiring...
-  module->pwires=new cWires(module); //there may be many wires...
 cMultiWireBuilder* xwire = new cMultiWireBuilder(); //***
   //---------------------factor---
   //----------------------------------------------------------------
@@ -766,7 +766,7 @@ cMultiWireBuilder* xwire = new cMultiWireBuilder(); //***
  //module->pwires->dump(stderr);
 //printf("ptr[%s]\n",ptr);
   module->psubs->solidify();
-  module->pwires->solidify();
+//  module->pwires->solidify();
 module->xwire = xwire->solidify();
 delete xwire; 
 

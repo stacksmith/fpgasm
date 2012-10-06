@@ -107,6 +107,10 @@ void CLASS::verilog(FILE*fout){
  and outputs as verilog wires.  Now the module wiring can connect them all!
 ******************************************************************************/
 void CLASS::vlogWiring(FILE*fout){
+  //TODO: reimplement vlog wiring!
+  fprintf(stderr,"Verilog needs re-implementation with new wiring format\n");
+  exit(-1);
+  /*
   cWireList wl = pwires->seekFirst();
   while(wl.exists()){
     //more wires exist.
@@ -126,8 +130,8 @@ void CLASS::vlogWiring(FILE*fout){
       if(0xFF==sInst){
         //source is "MY" pin.  The pin can also be a power net
         switch(sIndex){
-          case 0xFF: /*vcc*/ fputs("vcc",fout); break;
-          case 0xFE: /*gnd*/ fputs("gnd",fout); break;
+          case 0xFF:  fputs("vcc",fout); break;
+          case 0xFE:  fputs("gnd",fout); break;
           default:
             fprintf(fout,"%s_%s",name,pins->name[sIndex]);
             break;
@@ -139,6 +143,7 @@ void CLASS::vlogWiring(FILE*fout){
     }
     wl.seekNext();  //next wire
   }
+  */
 }
 /******************************************************************************
  Verilog output of a pin name for ASSIGNMENTS!

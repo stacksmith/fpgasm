@@ -19,7 +19,7 @@
 #pragma once
 class cDyn;
 class cModule;
-class cWires;
+//class cWires;
 class cMultiWire;
 class cProto{
 public:
@@ -34,7 +34,7 @@ public:
   //primitives and modules both have a list of valid parameters
   cCollection *paramnames;
   cCollection *psubs;   //names-> submodules...Not relevant to prim.
-  cWires* pwires;
+//  cWires* pwires;
 cMultiWire* xwire;
   cCollection *pins;    //pin name->buswidth mapping
 private:
