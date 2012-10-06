@@ -17,7 +17,6 @@
     along with FPGAsm.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #pragma once
-#include "cWires.h"
 #include "cMultiWireWalker.h"
 /******************************************************************************
  cDyn

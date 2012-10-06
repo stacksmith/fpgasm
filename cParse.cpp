@@ -25,7 +25,6 @@
 #define CLASS cParse
 #include "cDevice.h"
 extern cDevice* pDevice;
-#include "cWires.h"
 
 #include "cMultiWireBuilder.h"
 CLASS::CLASS(){
