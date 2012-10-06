@@ -25,6 +25,7 @@ CLASS::CLASS(cMultiWire& it){
   index=0;
 }
 CLASS::~CLASS(){
+  buf=0;
   //do not free - we don't own the wire, just walk it
   
 }

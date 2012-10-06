@@ -23,7 +23,7 @@ class cMultiWireBuilder;
 class cSub;
 /* While parsing wiring, we generate endpoints.  */
 struct sWireEndpoint {
-  U8 inst;        //index of the instance
+  U16 inst;        //index of the instance
   U8 pindex;      //index of the pin
   U8 busid1;      //start bus index
   U8 busid2;      //end   bus index

@@ -18,6 +18,7 @@
 ******************************************************************************/
 #pragma once
 #include "cWires.h"
+#include "cMultiWireWalker.h"
 /******************************************************************************
  cDyn
  
@@ -50,7 +51,7 @@ public:
   void hierName(FILE*f);
   void place();
   //xdl-specific, see cDynXdl.cpp
-  void xdlWire();
+  void xdlWires1();
   void xdlDefs();   //output definitions to xdl...
   void xdlHeader();
   //verilog-specific see cDynVlog.cpp
@@ -67,13 +68,18 @@ protected:
   //xdl-specific, see cDynXdl.cpp
   void xdlNetHeader(cCollection* pins,int pindex);
   void xdlNetInpin(cCollection* pins,int pindex);
-  void xdlStartWires(cDyn* prim);
-  void xdlContinueWire(cDyn* prim,int pindex,int busid);
-  void xdlWireUpOrDown(int pindex,int busid);
-  void xdlWirePower();
-  void xdlWireInner(int pinst,int pindex,int busid,cWireList wl);
+  void xdlStartWires1(cDyn* prim);
+  void xdlContinueWire1(cDyn* prim,int pindex,int busid);
+  void xdlWireUpOrDown1(int pindex,int busid);
+  void xdlWirePower1();
+  void xdlWireInner1(int pinst,int pindex,int busid,cMultiWireWalker& walker);
   //verilog-specific, see cDynVerilog.cpp
   void verilogDefs(); 
   bool isPrimitive();
 };
-  
+// deprecated old-style wiring
+//  void xdlContinueWire(cDyn* prim,int pindex,int busid);
+//  void xdlStartWires1(cDyn* prim);
+//  void xdlWirePower1();
+//  void xdlWireInner1(int pinst,int pindex,int busid,cMultiWireWalker& walker);
+

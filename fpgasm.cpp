@@ -93,7 +93,7 @@ int main(int argc,char** argv){
        // now, if the output file is .xdl, output xdl.
         dynroot->xdlHeader();
         dynroot->xdlDefs();
-        dynroot->xdlWire();
+        dynroot->xdlWires1();
         fprintf(stderr,"Success! %s generated\n",argv[2]);
         }break;
       case verilog:

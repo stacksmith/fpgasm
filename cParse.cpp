@@ -197,7 +197,7 @@ sWireEndpoint CLASS::parseWireEndpoint(cModule* module,int idxInst,cSub* pinst){
 //  fprintf(stderr,"endpoint %d[%.*s]\n",i++,len,ptr);
   cProto* pinowner; //for error reporting mainly...
   if(tokAnything("my",len)){
-    ep.inst=0xFF;
+    ep.inst=INST_MY;
     ppins=module->pins;
     pinowner=module;
     /*proto=module;*/
