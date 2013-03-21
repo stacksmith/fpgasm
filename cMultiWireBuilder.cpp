@@ -44,12 +44,10 @@ void CLASS::add(int inst,int port,int busid){
 //fprintf(stderr,"cMultiWireBuilder: added %d %d %d, total %d\n",inst,port,busid,index);
 }
 void CLASS::stop(){
-  buf[index].inst=INST_STOP;
-  index++;
+  add(INST_STOP, 0, 0);
 }
 void CLASS::end(){
-  buf[index].inst=INST_END;
-  index++;
+  add(INST_END, 0, 0);
 }
 cMultiWire* CLASS::solidify(){
   end();
