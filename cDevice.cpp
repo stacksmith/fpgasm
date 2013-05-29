@@ -219,23 +219,29 @@ void CLASS::parse_xdlrc(const char* fname){
   }
   lineno=1;
   buf = (char*)malloc(1024);
-  int stage=0;
+  int stage=-1;
   while(true){
     if(!readline()) break;
     switch(stage){
+      //----------------------------------------------------------
+      case -1:  // look for part name/speed
+        if(0==strncmp(buf,"(xdl_resource_report ",21)){
+          designator=strtok(buf+21," ");
+          designator=strdup(strtok(NULL," "));
+          stage=0;
+        }
+        break;
       //----------------------------------------------------------
       case 0:  // parse until (tiles...
         if(0==strncmp(buf,"(tiles ",7)){
           //TODO: parse tile size...
           stage=1;
-//fprintf(stderr,"STAGE 1\n");
         }
         break;
       //----------------------------------------------------------
       case 1: //tile...
         if(0==strncmp(buf,")",1)){
           stage=2;
-//fprintf(stderr,"STAGE 2\n");
         } else {
           parse_tile(buf);
         }
@@ -284,4 +290,8 @@ void CLASS::error(U32 xerrno){
   fputs("\n",stderr);
  fprintf(stderr,"----------------------------------------------------------------------\n");
   throw(xerrno);
+}
+//device name and speed grade for output
+const char* CLASS::getDesignator(){
+  return designator;
 }

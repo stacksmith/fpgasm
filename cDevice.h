@@ -28,6 +28,7 @@ private:
   int lineno;
   char* buf;
   FILE* f;
+  char* designator;     //device name and speed
 //CODE
 public:
   cDevice();
@@ -43,6 +44,7 @@ public:
   
   void listProtos();
   const char* tileFor( char* primsite); //like SLICE_XY or IOB
+  const char* getDesignator();          //device name and speed grade for output
 private:  
   bool readline();
   void parse_tile(char* buf);

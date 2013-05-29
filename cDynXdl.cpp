@@ -240,7 +240,7 @@ void CLASS::xdlHeader(){
   fprintf(fout,"# =======================================================\n");
   fprintf(fout,"# top FPGA Hammer tools 0.1.0\n");
   fprintf(fout,"# =======================================================\n");
-  fprintf(fout,"design \"top\" xc3s200ft256-4 v3.2 ,\n");
+  fprintf(fout,"design \"top\" %s v3.2 ,\n",pDevice->getDesignator()  );
   fprintf(fout,"  cfg \" \" ;\n") ; 
 }
 
