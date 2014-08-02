@@ -4,4 +4,4 @@ See other repos for tools and code
 * [fpgasm-test](https://github.com/stacksmith/fpgasm-test)  test code
 * [fpgasm-xcfg](https://github.com/stacksmith/fpgasm-xcfg)  visual configuration string tool
 
-
+Crap.  I wish I'd learned Common Lisp a couple of years ago!
