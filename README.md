@@ -1,3 +1,7 @@
+#THIS PROJECT HAS BEEN MOVED!
+
+https://github.com/FPGAsm/FPGAsm
+
 See [the wiki](https://github.com/stacksmith/fpgasm/wiki) for more information.
 
 See other repos for tools and code
